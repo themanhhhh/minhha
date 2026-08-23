@@ -1,14 +1,16 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { RolesGuard } from './roles.guard';
+import { JwtAuthGuard } from './jwt-auth.guard';
 import { DatabaseModule } from '../../database/database.module';
 
 @Module({
   imports: [DatabaseModule, JwtModule.register({})],
   controllers: [AuthController],
-  providers: [AuthService, RolesGuard],
-  exports: [AuthService, RolesGuard],
+  providers: [AuthService, { provide: APP_GUARD, useClass: JwtAuthGuard }, { provide: APP_GUARD, useClass: RolesGuard }],
+  exports: [AuthService],
 })
 export class AuthModule {}

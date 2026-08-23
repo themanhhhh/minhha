@@ -1,0 +1,2 @@
+import { IsDateString, IsInt, IsOptional, IsString, Min, MinLength } from 'class-validator';
+export class CreateClassDto { @IsString() code!: string; @IsString() @MinLength(2) name!: string; @IsString() courseId!: string; @IsString() teacherId!: string; @IsDateString() startDate!: string; @IsOptional() @IsDateString() endDate?: string; @IsString() schedule!: string; @IsOptional() @IsString() room?: string; @IsInt() @Min(1) capacity = 20; }
