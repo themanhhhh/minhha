@@ -1,0 +1,7 @@
+import { mockStudentClasses } from './student-classes';
+import type { StudentClassDetail } from '@/types';
+
+const base = mockStudentClasses[0];
+export const mockStudentClassDetails: StudentClassDetail[] = [
+  { ...base, announcements: [{ id: 1, author: 'Phạm Nhật Nam', initials: 'PN', message: 'Chào cả lớp! Các bạn nhớ xem trước phần hội thoại bài 16 trước buổi học tối nay nhé.', time: '2 giờ trước' }, { id: 2, author: 'Phạm Nhật Nam', initials: 'PN', message: 'Record buổi học ngày 20/08 đã được cập nhật. Chúc các bạn học tốt!', time: '2 ngày trước' }], works: [{ id: 1, title: 'Kaiwa: Giới thiệu bản thân', type: 'LESSON', description: 'Luyện hội thoại theo cặp và chuẩn bị phần giới thiệu ngắn.', dueDate: 'Hôm nay · 18:30', status: 'UPCOMING' }, { id: 2, title: 'Bài tập từ vựng bài 15', type: 'ASSIGNMENT', description: 'Ôn tập 30 từ vựng và hoàn thành bài kiểm tra nhỏ.', dueDate: '25/08/2026', status: 'UPCOMING' }, { id: 3, title: 'Tài liệu ngữ pháp N4', type: 'MATERIAL', description: 'Tài liệu tham khảo cho chương trình N4.', dueDate: 'Đã đăng · 18/08/2026', status: 'COMPLETED' }], people: [{ id: 100, fullName: 'Phạm Nhật Nam', initials: 'PN', role: 'TEACHER' }, { id: 1, fullName: 'Nguyễn Minh Anh', initials: 'MA', role: 'STUDENT' }, { id: 2, fullName: 'Trần Hoàng Long', initials: 'TL', role: 'STUDENT' }, { id: 3, fullName: 'Lê Khánh Linh', initials: 'KL', role: 'STUDENT' }, { id: 4, fullName: 'Phạm Đức Anh', initials: 'ĐA', role: 'STUDENT' }, { id: 5, fullName: 'Vũ Ngọc Mai', initials: 'NM', role: 'STUDENT' }] },
+];
