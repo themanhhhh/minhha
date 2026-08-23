@@ -1,0 +1,6 @@
+import { ArrowRight, Construction } from 'lucide-react';
+import { PageHeader } from '@/components/common/page-header';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+
+export function FeaturePage({ title, description, role, items }: { title: string; description: string; role: string; items: string[] }) { return <><PageHeader eyebrow={role} title={title} description={description} /><Card><CardContent className="flex flex-col items-center px-6 py-16 text-center"><div className="mb-5 grid size-14 place-items-center rounded-2xl bg-emerald-50 text-emerald-600"><Construction className="size-6" /></div><h2 className="text-lg font-semibold">Khung màn hình đã sẵn sàng</h2><p className="mt-2 max-w-lg text-sm leading-6 text-muted-foreground">Màn hình này đã được đưa vào routing và design system. Các module bên dưới sẽ được triển khai theo API contract mà không cần thay đổi app shell.</p><div className="mt-6 flex flex-wrap justify-center gap-2">{items.map((item) => <span key={item} className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-600">{item}</span>)}</div><Button variant="outline" className="mt-8">Xem tài liệu module <ArrowRight className="size-4" /></Button></CardContent></Card></>; }

@@ -1,0 +1,41 @@
+'use client';
+
+import { useDeferredValue, useState } from 'react';
+import Link from 'next/link';
+import { ArrowRight, BookOpen, CalendarDays, CheckCircle2, Clock3, MoreHorizontal, Search, UsersRound } from 'lucide-react';
+import { useStudentClasses } from '@/features/students/hooks/use-student-classes';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge, type BadgeProps } from '@/components/ui/badge';
+import { Avatar } from '@/components/ui/avatar';
+import { Skeleton } from '@/components/ui/skeleton';
+import { EmptyState } from '@/components/common/empty-state';
+import { ErrorState } from '@/components/common/error-state';
+import type { ClassTheme, StudentClass, StudentClassStatus } from '@/types';
+import { cn } from '@/lib/utils';
+
+const themes: Record<ClassTheme, { banner: string; orb: string; icon: string }> = {
+  emerald: { banner: 'from-emerald-400 to-teal-600', orb: 'bg-white/15', icon: '日本語' },
+  violet: { banner: 'from-violet-500 to-indigo-700', orb: 'bg-white/15', icon: '学' },
+  amber: { banner: 'from-amber-400 to-orange-600', orb: 'bg-white/20', icon: '日' },
+  rose: { banner: 'from-rose-400 to-pink-600', orb: 'bg-white/15', icon: 'N2' },
+  sky: { banner: 'from-sky-400 to-cyan-600', orb: 'bg-white/15', icon: '語' },
+};
+const tabs: { label: string; value: StudentClassStatus | 'ALL' }[] = [{ label: 'Tất cả lớp học', value: 'ALL' }, { label: 'Đang học', value: 'ACTIVE' }, { label: 'Sắp bắt đầu', value: 'UPCOMING' }, { label: 'Đã hoàn thành', value: 'COMPLETED' }];
+const statusMeta: Record<StudentClassStatus, { label: string; variant: BadgeProps['variant'] }> = { ACTIVE: { label: 'Đang học', variant: 'success' }, UPCOMING: { label: 'Sắp bắt đầu', variant: 'warning' }, COMPLETED: { label: 'Đã hoàn thành', variant: 'secondary' } };
+
+export function StudentClasses() {
+  const [search, setSearch] = useState('');
+  const [status, setStatus] = useState<StudentClassStatus | 'ALL'>('ALL');
+  const deferredSearch = useDeferredValue(search);
+  const { data: classes = [], isLoading, isError, refetch } = useStudentClasses({ search: deferredSearch, status });
+  return <div className="mx-auto max-w-7xl">
+    <div className="mb-7 flex flex-col gap-5 border-b border-slate-100 pb-6 sm:flex-row sm:items-end sm:justify-between"><div><div className="mb-2 flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.16em] text-emerald-500"><BookOpen className="size-3.5" />Không gian học tập</div><h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">Lớp học của tôi</h1><p className="mt-2 text-sm text-slate-500">Truy cập lớp học, tài liệu và tiến độ học tập của bạn.</p></div><div className="relative w-full sm:max-w-xs"><Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" /><Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Tìm lớp học..." className="border-slate-200 bg-white pl-9 focus-visible:ring-emerald-400" /></div></div>
+    <div className="mb-6 flex gap-1 overflow-x-auto border-b border-slate-100 pb-px">{tabs.map((tab) => <button key={tab.value} onClick={() => setStatus(tab.value)} className={cn('shrink-0 border-b-2 px-3 pb-3 text-sm font-medium transition-colors', status === tab.value ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-slate-500 hover:text-slate-800')}>{tab.label}</button>)}</div>
+    <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_270px]"><section><div className="mb-4 flex items-center justify-between"><h2 className="text-sm font-semibold text-slate-800">{status === 'ALL' ? 'Tất cả lớp học' : tabs.find((tab) => tab.value === status)?.label}</h2><span className="text-xs text-slate-400">{classes.length} lớp</span></div>{isLoading ? <div className="grid gap-5 sm:grid-cols-2">{[1, 2, 3, 4].map((item) => <Skeleton key={item} className="h-[286px] rounded-xl" />)}</div> : isError ? <ErrorState onRetry={() => void refetch()} /> : classes.length === 0 ? <EmptyState title="Không có lớp học phù hợp" description="Thử tìm kiếm với tên lớp khác hoặc chuyển sang bộ lọc khác." /> : <div className="grid gap-5 sm:grid-cols-2">{classes.map((item) => <ClassroomCard key={item.id} classData={item} />)}</div>}</section><UpcomingPanel classes={classes} /></div>
+  </div>;
+}
+
+function ClassroomCard({ classData }: { classData: StudentClass }) { const theme = themes[classData.theme]; const progress = Math.round((classData.completedLessons / classData.totalLessons) * 100); const meta = statusMeta[classData.status]; return <Link href={`/student/classes/${classData.id}`} className="group block"><Card className="overflow-hidden border-slate-200 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-md"><div className={cn('relative h-32 overflow-hidden bg-gradient-to-br p-5 text-white', theme.banner)}><div className="absolute -right-8 -top-12 size-40 rounded-full border-[18px] border-white/10" /><div className="absolute -bottom-16 right-12 size-36 rounded-full border-[14px] border-white/10" /><div className={cn('relative grid size-12 place-items-center rounded-xl text-sm font-bold shadow-sm backdrop-blur-sm', theme.orb)}>{theme.icon}</div><div className="absolute bottom-4 left-5"><p className="text-xs font-medium text-white/80">{classData.code}</p><h3 className="mt-0.5 text-lg font-semibold tracking-tight">{classData.name}</h3></div><button type="button" aria-label="Tùy chọn lớp học" onClick={(event) => event.preventDefault()} className="absolute right-3 top-3 rounded-full p-1.5 text-white/80 opacity-0 transition-opacity hover:bg-white/15 group-hover:opacity-100"><MoreHorizontal className="size-4" /></button></div><CardContent className="p-5"><div className="flex items-start justify-between gap-3"><div><p className="text-sm font-medium text-slate-800">{classData.section}</p><p className="mt-1 text-xs text-slate-500">{classData.teacherName}</p></div><Badge variant={meta.variant}>{meta.label}</Badge></div><div className="mt-5"><div className="mb-2 flex items-center justify-between text-xs"><span className="text-slate-500">Tiến độ khóa học</span><span className="font-semibold text-emerald-600">{progress}%</span></div><div className="h-1.5 overflow-hidden rounded-full bg-emerald-50"><div className="h-full rounded-full bg-emerald-500 transition-all" style={{ width: `${progress}%` }} /></div></div><div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4 text-xs text-slate-500"><span className="flex items-center gap-1.5"><Clock3 className="size-3.5 text-emerald-500" />{classData.nextLesson}</span><span className="flex items-center gap-1.5"><UsersRound className="size-3.5" />{classData.studentCount}</span></div></CardContent></Card></Link>; }
+
+function UpcomingPanel({ classes }: { classes: StudentClass[] }) { const upcoming = classes.filter((item) => item.status !== 'COMPLETED').slice(0, 3); return <Card className="h-fit border-slate-200 shadow-sm"><CardContent className="p-5"><div className="flex items-center justify-between"><div><p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Lịch sắp tới</p><h2 className="mt-1 text-lg font-semibold text-slate-800">Việc cần làm</h2></div><div className="grid size-9 place-items-center rounded-lg bg-emerald-50 text-emerald-600"><CalendarDays className="size-4" /></div></div>{upcoming.length === 0 ? <p className="mt-6 text-sm text-slate-500">Bạn đã hoàn thành tất cả lớp học.</p> : <div className="mt-5 space-y-4">{upcoming.map((item) => <div key={item.id} className="flex gap-3"><div className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-lg bg-slate-50 text-emerald-500"><Clock3 className="size-4" /></div><div className="min-w-0"><p className="truncate text-sm font-medium text-slate-700">{item.nextLessonTitle}</p><p className="mt-1 text-xs text-slate-400">{item.nextLesson}</p><p className="mt-1 truncate text-xs text-slate-500">{item.name} · {item.code}</p></div></div>)}</div>}<Link href="/student/schedule" className="mt-6 flex items-center gap-1 text-sm font-semibold text-emerald-600 hover:text-emerald-700">Xem lịch học <ArrowRight className="size-3.5" /></Link></CardContent></Card>; }

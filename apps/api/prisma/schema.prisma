@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           BigInt     @id @default(autoincrement())
+  email        String     @unique @db.VarChar(320)
+  passwordHash String     @map("password_hash") @db.VarChar(255)
+  fullName     String     @map("full_name") @db.NVarChar(200)
+  // SQL Server Prisma connector does not support Prisma enums.
+  // Keep the domain values uppercase and enforce them with DB constraints later.
+  role         String     @db.VarChar(30)
+  status       String     @default("ACTIVE") @db.VarChar(20)
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  student      Student?
+  teacher      Teacher?
+  refreshTokens RefreshToken[]
+
+  @@map("NguoiDung")
+}
+
+model Student {
+  id          BigInt @id @default(autoincrement())
+  userId      BigInt @unique @map("user_id")
+  studentCode String @unique @map("student_code") @db.VarChar(30)
+  user        User   @relation(fields: [userId], references: [id])
+
+  @@map("HocVien")
+}
+
+model Teacher {
+  id         BigInt @id @default(autoincrement())
+  userId     BigInt @unique @map("user_id")
+  teacherCode String @unique @map("teacher_code") @db.VarChar(30)
+  user       User   @relation(fields: [userId], references: [id])
+
+  @@map("GiaoVien")
+}
+
+model RefreshToken {
+  id        BigInt   @id @default(autoincrement())
+  userId    BigInt   @map("user_id")
+  tokenHash String   @map("token_hash") @db.VarChar(255)
+  expiresAt DateTime @map("expires_at")
+  revokedAt DateTime? @map("revoked_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("RefreshToken")
+}

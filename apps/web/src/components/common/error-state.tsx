@@ -1,0 +1,3 @@
+import { CircleAlert, RotateCcw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+export function ErrorState({ onRetry }: { onRetry?: () => void }) { return <div className="flex flex-col items-center justify-center rounded-xl border border-dashed bg-white px-6 py-16 text-center"><div className="mb-4 grid size-12 place-items-center rounded-full bg-red-50 text-red-600"><CircleAlert className="size-5" /></div><h3 className="font-semibold">Không thể tải dữ liệu</h3><p className="mt-1 max-w-sm text-sm text-muted-foreground">Đã có lỗi xảy ra. Vui lòng thử lại hoặc kiểm tra kết nối.</p>{onRetry && <Button variant="outline" size="sm" className="mt-5" onClick={onRetry}><RotateCcw className="size-4" />Thử lại</Button>}</div>; }

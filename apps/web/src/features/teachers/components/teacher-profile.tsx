@@ -1,0 +1,51 @@
+'use client';
+
+import { useState } from 'react';
+import { BookOpen, CalendarDays, Check, GraduationCap, KeyRound, LogOut, Mail, Phone, UserRound, UsersRound, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { authService } from '@/services';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import type { TeacherProfile as TeacherProfileData } from '@/types';
+
+export function TeacherProfile({ profile }: { profile: TeacherProfileData }) {
+  const router = useRouter();
+  const [changePasswordOpen, setChangePasswordOpen] = useState(false);
+
+  function logout() {
+    authService.logout();
+    router.replace('/login');
+  }
+
+  return <div className="mx-auto max-w-5xl">
+    <div className="mb-6 flex items-center gap-1 text-xs font-medium text-slate-400"><span>Riki LMS</span><span className="px-1">/</span><span>Hồ sơ giáo viên</span></div>
+    <Card className="overflow-hidden border-emerald-100 shadow-sm">
+      <CardHeader className="border-b bg-white px-5 py-5 sm:px-7"><div className="flex items-center gap-4"><div className="grid size-12 shrink-0 place-items-center rounded-full bg-emerald-50 text-lg font-bold text-emerald-500">P</div><div><CardTitle className="text-lg sm:text-xl">{profile.fullName}</CardTitle><p className="mt-0.5 text-xs text-slate-500">{profile.code} · Giáo viên</p></div></div></CardHeader>
+      <CardContent className="p-5 sm:p-7">
+        <div className="grid gap-3 sm:grid-cols-2">
+          <ProfileField icon={<GraduationCap />} label="Mã giáo viên" value={profile.code} />
+          <ProfileField icon={<UserRound />} label="Họ và tên" value={profile.fullName} />
+          <ProfileField icon={<UserRound />} label="Giới tính" value={profile.gender} />
+          <ProfileField icon={<CalendarDays />} label="Ngày sinh" value={formatDate(profile.dateOfBirth)} />
+          <ProfileField icon={<Mail />} label="Email" value={profile.email} />
+          <ProfileField icon={<Phone />} label="Số điện thoại" value={profile.phone} />
+        </div>
+        <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <InfoCard icon={<GraduationCap />} label="Trình độ JLPT" value={profile.jlptLevel} />
+          <InfoCard icon={<BookOpen />} label="Chuyên môn" value={profile.specialty} wide />
+          <InfoCard icon={<UsersRound />} label="Lớp phụ trách" value={`${profile.classCount} lớp`} />
+          <InfoCard icon={<Check />} label="Trạng thái" value="Đang giảng dạy" status />
+        </div>
+        <div className="mt-7 flex flex-wrap gap-3 border-t pt-6"><Button variant="secondary" onClick={() => setChangePasswordOpen((current) => !current)}><KeyRound className="size-4" />Đổi mật khẩu</Button><Button variant="outline" onClick={logout}><LogOut className="size-4" />Đăng xuất</Button></div>
+        {changePasswordOpen && <ChangePassword onClose={() => setChangePasswordOpen(false)} />}
+      </CardContent>
+    </Card>
+  </div>;
+}
+
+function ProfileField({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) { return <div className="flex min-h-16 items-center gap-3 rounded-lg bg-slate-50 px-4 py-3"><span className="grid size-8 shrink-0 place-items-center rounded-full bg-emerald-50 text-emerald-500"><span className="size-3.5 [&>svg]:size-3.5">{icon}</span></span><div className="min-w-0"><p className="text-[11px] text-slate-400">{label}</p><p className="truncate text-sm font-medium text-slate-700">{value}</p></div></div>; }
+function InfoCard({ icon, label, value, status, wide }: { icon: React.ReactNode; label: string; value: string; status?: boolean; wide?: boolean }) { return <div className={`flex min-h-20 flex-col justify-between rounded-lg border border-slate-100 bg-white px-3 py-2.5 ${wide ? 'lg:col-span-1' : ''}`}><div className="flex items-center gap-1.5 text-[11px] text-slate-400"><span className="text-emerald-500 [&>svg]:size-3.5">{icon}</span>{label}</div>{status ? <Badge variant="success" className="mt-2 w-fit"><Check className="mr-1 size-3" />{value}</Badge> : <p className="mt-2 truncate text-sm font-semibold text-emerald-500">{value}</p>}</div>; }
+function ChangePassword({ onClose }: { onClose: () => void }) { return <div className="mt-6 rounded-xl border border-emerald-100 bg-emerald-50/50 p-4 sm:p-5"><div className="mb-4 flex items-center justify-between"><div><h3 className="text-sm font-semibold">Đổi mật khẩu</h3><p className="mt-1 text-xs text-muted-foreground">Mật khẩu mới cần có ít nhất 8 ký tự.</p></div><button onClick={onClose} className="rounded-md p-1 text-muted-foreground hover:bg-white"><X className="size-4" /></button></div><div className="grid gap-3 sm:grid-cols-2"><Input type="password" placeholder="Mật khẩu hiện tại" /><Input type="password" placeholder="Mật khẩu mới" /></div><div className="mt-3 flex justify-end"><Button size="sm" onClick={onClose}>Lưu mật khẩu</Button></div></div>; }
+function formatDate(date: string) { const [year, month, day] = date.split('-'); return `${year}-${month}-${day}`; }

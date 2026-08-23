@@ -1,0 +1,6 @@
+import { ArrowDownRight, ArrowUpRight, BookOpen, CalendarDays, ChartNoAxesCombined, CheckCircle2, Target, UserRound, UsersRound } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import type { DashboardStat } from '@/types';
+
+const icons = { book: BookOpen, target: Target, check: CheckCircle2, chart: ChartNoAxesCombined, calendar: CalendarDays, users: UsersRound, user: UserRound };
+export function StatCard({ stat }: { stat: DashboardStat }) { const Icon = icons[stat.icon as keyof typeof icons] ?? ChartNoAxesCombined; return <Card><CardContent className="p-5"><div className="flex items-start justify-between"><div className="grid size-10 place-items-center rounded-lg bg-emerald-50 text-emerald-600"><Icon className="size-5" /></div>{stat.trend !== 'neutral' && <span className={stat.trend === 'up' ? 'flex items-center text-xs font-semibold text-green-600' : 'flex items-center text-xs font-semibold text-amber-600'}>{stat.trend === 'up' ? <ArrowUpRight className="size-3.5" /> : <ArrowDownRight className="size-3.5" />}{stat.trend === 'up' ? 'Tăng' : 'Cần chú ý'}</span>}</div><p className="mt-5 text-sm text-muted-foreground">{stat.label}</p><p className="mt-1 text-2xl font-semibold tracking-tight">{stat.value}</p><p className="mt-1 text-xs text-muted-foreground">{stat.change}</p></CardContent></Card>; }

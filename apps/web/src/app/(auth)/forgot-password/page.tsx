@@ -1,0 +1,6 @@
+import Link from 'next/link';
+import { ArrowLeft, ArrowRight, Mail } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+export default function ForgotPasswordPage() { return <Card className="w-full max-w-md border-0 shadow-lg"><CardHeader className="p-8"><div className="mb-5 grid size-11 place-items-center rounded-xl bg-emerald-50 text-emerald-600"><Mail className="size-5" /></div><CardTitle className="text-2xl">Quên mật khẩu?</CardTitle><CardDescription className="mt-2">Nhập email để nhận hướng dẫn khôi phục mật khẩu.</CardDescription></CardHeader><CardContent className="p-8 pt-0"><form className="space-y-4"><div className="space-y-2"><label htmlFor="email" className="text-sm font-medium">Email</label><Input id="email" type="email" placeholder="you@riki.vn" required /></div><Button className="w-full" size="lg">Gửi hướng dẫn <ArrowRight className="size-4" /></Button></form><Link href="/login" className="mt-6 flex items-center justify-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground"><ArrowLeft className="size-4" />Quay lại đăng nhập</Link></CardContent></Card>; }
