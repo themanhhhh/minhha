@@ -4,6 +4,7 @@
   "scripts": {
     "build": "nest build",
     "dev": "nest start --watch",
+    "test": "vitest run",
     "lint": "eslint \"src/**/*.ts\"",
     "typecheck": "tsc --noEmit",
     "prisma:generate": "prisma generate",
@@ -34,6 +35,7 @@
     "eslint": "^9.34.0",
     "prisma": "^6.19.3",
     "tsx": "^4.19.2",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
   }
 }

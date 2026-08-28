@@ -33,6 +33,18 @@ docker compose up --build
 
 Prisma migration và seed nên chạy từ máy phát triển hoặc CI có quyền truy cập `DIRECT_URL`.
 
+Frontend có thể chuyển từ mock sang API bằng biến:
+
+```env
+NEXT_PUBLIC_USE_MOCK="false"
+```
+
+Backend test foundation:
+
+```bash
+pnpm --filter @riki/api test
+```
+
 Authentication/RBAC đã có module scaffold; login thật và persistence refresh token sẽ được nối vào Prisma ở MVP Core tiếp theo.
 
 ## Backend Authentication
@@ -87,6 +99,69 @@ DELETE /api/v1/classes/:id/students/:studentId
 ```
 
 Các API list hỗ trợ `page`, `pageSize`, `search` và filter theo domain. CRUD chỉ cho `ACADEMIC_STAFF`; `DIRECTOR` được phép đọc dữ liệu. Enrollment kiểm tra học viên tồn tại, lớp còn chỗ và không đăng ký trùng.
+
+## Lesson Management API
+
+Phase 7 đã có:
+
+```text
+GET   /api/v1/classes/:classId/lessons
+GET   /api/v1/lessons/:id
+POST  /api/v1/lessons
+PATCH /api/v1/lessons/:id
+PATCH /api/v1/lessons/:id/record
+```
+
+Lesson API kiểm tra quyền theo lớp: học viên chỉ xem lớp đã enrollment, giáo viên chỉ thao tác lớp mình phụ trách, học vụ có quyền quản lý và giám đốc chỉ đọc. Thời gian buổi học dùng `HH:mm`, ngày dùng ISO date; hệ thống chặn giờ kết thúc trước giờ bắt đầu và trùng lịch giáo viên/phòng học trong cùng ngày.
+
+## Teaching Operations API
+
+Phase 8 đã có:
+
+```text
+GET /api/v1/lessons/:lessonId/attendance
+PUT /api/v1/lessons/:lessonId/attendance
+
+GET  /api/v1/classes/:classId/tests
+POST /api/v1/tests
+GET  /api/v1/tests/:testId/scores
+PUT  /api/v1/tests/:testId/scores
+```
+
+Giáo viên chỉ được cập nhật điểm danh/điểm số trong lớp mình phụ trách. Học viên chỉ xem bản ghi của chính mình; Academic Staff có quyền quản trị; Director chỉ đọc. Payload attendance và scores được validate trùng học viên, enrollment và giới hạn điểm theo `maxScore`.
+
+## Student Portal API
+
+Các API riêng cho tài khoản học viên:
+
+```text
+GET /api/v1/me/profile
+GET /api/v1/me/classes
+GET /api/v1/me/classes/:classId
+GET /api/v1/me/schedule
+GET /api/v1/me/attendance
+GET /api/v1/me/scores
+GET /api/v1/me/progress
+```
+
+## Director Reports API
+
+```text
+GET /api/v1/dashboard/director
+GET /api/v1/reports/students
+GET /api/v1/reports/teachers
+GET /api/v1/reports/classes
+GET /api/v1/reports/attendance
+GET /api/v1/reports/scores
+```
+
+## Audit Logs
+
+```text
+GET /api/v1/audit-logs
+```
+
+Audit log hỗ trợ filter `entity`, `action`, pagination và lưu actor, entity, old/new value, thời gian thao tác. Các thao tác điểm danh và nhập điểm đã được ghi log; service sẵn sàng được gọi thêm trong các command CRUD còn lại.
 
 ## UI
 

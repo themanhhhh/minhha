@@ -1,11 +1,12 @@
 import { mockAttendanceEntries, mockScoreEntries, mockTeacherLessons, mockTeacherTests } from '@/mocks/teacher-assessment';
 import type { AttendanceEntry, ScoreEntry, TeacherLessonOption, TeacherTestOption } from '@/types';
+import { apiClient, isMockMode } from '@/lib/api-client';
 
 export const teacherAssessmentService = {
-  async getLessons(classId?: number): Promise<TeacherLessonOption[]> { return mockTeacherLessons.filter((lesson) => !classId || lesson.classId === classId); },
-  async getTests(classId?: number): Promise<TeacherTestOption[]> { return mockTeacherTests.filter((test) => !classId || test.classId === classId); },
-  async getAttendance(lessonId: number): Promise<AttendanceEntry[]> { return mockAttendanceEntries.map((entry) => ({ ...entry, lessonId })); },
-  async updateAttendance(_lessonId: number, entries: AttendanceEntry[]) { return entries; },
-  async getScores(testId: number): Promise<ScoreEntry[]> { return mockScoreEntries.map((entry) => ({ ...entry, testId })); },
-  async updateScores(_testId: number, entries: ScoreEntry[]) { return entries; },
+  async getLessons(classId?: number): Promise<TeacherLessonOption[]> { if (!isMockMode && classId) { const response = await apiClient<{ data: Array<{ id: string; classId: string; title: string; lessonDate: string }> }>(`/classes/${classId}/lessons`); return response.data.map((lesson) => ({ id: Number(lesson.id), classId: Number(lesson.classId), label: lesson.title, date: lesson.lessonDate.slice(0, 10) })); } return mockTeacherLessons.filter((lesson) => !classId || lesson.classId === classId); },
+  async getTests(classId?: number): Promise<TeacherTestOption[]> { if (!isMockMode && classId) { const response = await apiClient<{ data: Array<{ id: string; classId: string; name: string; testDate: string }> }>(`/classes/${classId}/tests`); return response.data.map((test) => ({ id: Number(test.id), classId: Number(test.classId), label: test.name, date: test.testDate?.slice(0, 10) ?? '' })); } return mockTeacherTests.filter((test) => !classId || test.classId === classId); },
+  async getAttendance(lessonId: number): Promise<AttendanceEntry[]> { if (!isMockMode) { const response = await apiClient<{ data: AttendanceEntry[] }>(`/lessons/${lessonId}/attendance`); return response.data.map((entry) => ({ ...entry, lessonId, status: entry.status ?? 'ABSENT' })); } return mockAttendanceEntries.map((entry) => ({ ...entry, lessonId })); },
+  async updateAttendance(lessonId: number, entries: AttendanceEntry[]) { if (!isMockMode) return apiClient<{ data: AttendanceEntry[] }>(`/lessons/${lessonId}/attendance`, { method: 'PUT', body: JSON.stringify({ entries: entries.map(({ studentId, status, note }) => ({ studentId: String(studentId), status, note })) }) }); return entries; },
+  async getScores(testId: number): Promise<ScoreEntry[]> { if (!isMockMode) { const response = await apiClient<{ data: ScoreEntry[] }>(`/tests/${testId}/scores`); return response.data; } return mockScoreEntries.map((entry) => ({ ...entry, testId })); },
+  async updateScores(testId: number, entries: ScoreEntry[]) { if (!isMockMode) return apiClient<{ data: ScoreEntry[] }>(`/tests/${testId}/scores`, { method: 'PUT', body: JSON.stringify({ entries: entries.map(({ studentId, value, note }) => ({ studentId: String(studentId), value: value ?? 0, note })) }) }); return entries; },
 };
