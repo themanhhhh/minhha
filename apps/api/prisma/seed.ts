@@ -290,6 +290,27 @@ async function main() {
   }
 
   const classList = [...classesByCode.values()];
+  const assignmentDefinitions = [
+    { title: 'Bài tập luyện tập tuần', description: 'Hoàn thành bài luyện tập và nộp file đáp án hoặc ảnh chụp bài làm.' },
+    { title: 'Minh chứng thực hành hội thoại', description: 'Tải lên tài liệu chuẩn bị và hình ảnh minh chứng phần thực hành trên lớp.' },
+  ];
+  for (const [classIndex, classRoom] of classList.entries()) {
+    for (const [assignmentIndex, definition] of assignmentDefinitions.entries()) {
+      const dueAt = classRoom.status === ClassStatus.COMPLETED
+        ? addDays(today, -30)
+        : classRoom.status === ClassStatus.UPCOMING
+          ? addDays(classRoom.startDate, 7 + assignmentIndex * 7)
+          : assignmentIndex === 0
+            ? addDays(today, (classIndex % 5) - 3)
+            : addDays(today, 7 + (classIndex % 4) * 3);
+      const existing = await prisma.assignment.findFirst({ where: { classId: classRoom.id, title: definition.title } });
+      if (existing) {
+        await prisma.assignment.update({ where: { id: existing.id }, data: { description: definition.description, dueAt } });
+      } else {
+        await prisma.assignment.create({ data: { classId: classRoom.id, title: definition.title, description: definition.description, dueAt } });
+      }
+    }
+  }
   const studentByCode = new Map(students.map((student) => [student.studentCode, student]));
   const enrollmentData = new Map<string, {
     studentId: bigint;
@@ -486,10 +507,11 @@ async function main() {
     prisma.attendance.count(),
     prisma.test.count(),
     prisma.score.count(),
+    prisma.assignment.count(),
     prisma.auditLog.count(),
   ]);
   console.log(`Seeded Riki LMS demo data: student@riki.vn / ${demoPassword}`);
-  console.log(`Counts: users=${counts[0]}, students=${counts[1]}, teachers=${counts[2]}, courses=${counts[3]}, classes=${counts[4]}, enrollments=${counts[5]}, lessons=${counts[6]}, attendance=${counts[7]}, tests=${counts[8]}, scores=${counts[9]}, auditLogs=${counts[10]}`);
+  console.log(`Counts: users=${counts[0]}, students=${counts[1]}, teachers=${counts[2]}, courses=${counts[3]}, classes=${counts[4]}, enrollments=${counts[5]}, lessons=${counts[6]}, attendance=${counts[7]}, tests=${counts[8]}, scores=${counts[9]}, assignments=${counts[10]}, auditLogs=${counts[11]}`);
 }
 
 main().catch((error) => { console.error(error); process.exitCode = 1; }).finally(async () => { await prisma.$disconnect(); });

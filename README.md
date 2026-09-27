@@ -27,6 +27,23 @@ Sao chép `.env.example` thành `.env`, điền connection string từ Supabase 
 
 NestJS sẽ nạp `.env` ở thư mục gốc monorepo (hoặc `apps/api/.env`) và từ chối khởi động nếu thiếu `DATABASE_URL`, `JWT_ACCESS_SECRET` hoặc `JWT_REFRESH_SECRET`. `DIRECT_URL` chỉ bắt buộc khi chạy Prisma migration/seed.
 
+## Student Assignment Uploads
+
+Bài tập của học viên được lưu trong PostgreSQL với deadline; file nộp được lưu ở Supabase Storage bucket private `student-submissions`. Tạo bucket này trong Supabase Dashboard → Storage, sau đó thêm các biến server-only vào `apps/api/.env`:
+
+```env
+SUPABASE_URL="https://<project-ref>.supabase.co"
+SUPABASE_SERVICE_ROLE_KEY="<service-role-key>"
+SUPABASE_STORAGE_BUCKET="student-submissions"
+```
+
+Không đưa `SUPABASE_SERVICE_ROLE_KEY` vào frontend hoặc biến `NEXT_PUBLIC_*`. Học viên có thể nộp tối đa 5 file, mỗi file tối đa 10 MB; hệ thống hỗ trợ PDF, Word, Excel, PowerPoint và ảnh. File được trả về bằng signed URL có thời hạn.
+
+```text
+GET  /api/v1/me/classes/:classId/assignments
+POST /api/v1/me/assignments/:assignmentId/submission
+```
+
 Khởi động API và web bằng Docker sau khi tạo `.env`:
 
 ```bash

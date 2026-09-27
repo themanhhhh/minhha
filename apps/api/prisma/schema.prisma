@@ -79,6 +79,11 @@ enum TransferStatus {
   REJECTED
 }
 
+enum SubmissionStatus {
+  SUBMITTED
+  LATE
+}
+
 model User {
   id            BigInt         @id @default(autoincrement())
   email         String         @unique @db.VarChar(320)
@@ -140,6 +145,7 @@ model Student {
   reservations   StudyReservation[]
   attendance     Attendance[]
   scores         Score[]
+  submissions    AssignmentSubmission[]
   createdAt      DateTime            @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt      DateTime            @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -197,6 +203,7 @@ model Class {
   outgoingTransfers ClassTransfer[]     @relation("FromClassTransfers")
   incomingTransfers ClassTransfer[]     @relation("ToClassTransfers")
   reservations      StudyReservation[]
+  assignments       Assignment[]
   createdAt         DateTime            @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt         DateTime            @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -311,6 +318,51 @@ model Score {
   @@unique([testId, studentId])
   @@index([studentId])
   @@map("DiemSo")
+}
+
+model Assignment {
+  id          BigInt       @id @default(autoincrement())
+  classId     BigInt       @map("class_id")
+  title       String       @db.VarChar(200)
+  description String?      @db.Text
+  dueAt       DateTime     @map("due_at") @db.Timestamptz(3)
+  createdAt   DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime     @updatedAt @map("updated_at") @db.Timestamptz(3)
+  class       Class        @relation(fields: [classId], references: [id], onDelete: Cascade)
+  submissions AssignmentSubmission[]
+
+  @@index([classId, dueAt])
+  @@map("BaiTap")
+}
+
+model AssignmentSubmission {
+  id           BigInt           @id @default(autoincrement())
+  assignmentId BigInt           @map("assignment_id")
+  studentId    BigInt           @map("student_id")
+  note         String?          @db.Text
+  status       SubmissionStatus @default(SUBMITTED)
+  submittedAt  DateTime         @default(now()) @map("submitted_at") @db.Timestamptz(3)
+  assignment   Assignment       @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  student      Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  files        AssignmentFile[]
+
+  @@unique([assignmentId, studentId])
+  @@index([studentId, submittedAt])
+  @@map("NopBai")
+}
+
+model AssignmentFile {
+  id           BigInt               @id @default(autoincrement())
+  submissionId BigInt               @map("submission_id")
+  storagePath  String               @map("storage_path") @db.VarChar(500)
+  fileName     String               @map("file_name") @db.VarChar(255)
+  mimeType     String               @map("mime_type") @db.VarChar(120)
+  sizeBytes    Int                  @map("size_bytes")
+  createdAt    DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  submission   AssignmentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@index([submissionId])
+  @@map("TepNopBai")
 }
 
 model AuditLog {

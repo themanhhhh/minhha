@@ -13,6 +13,7 @@ import { ScoresModule } from './modules/scores/scores.module';
 import { StudentPortalModule } from './modules/student-portal/student-portal.module';
 import { ReportsModule } from './modules/reports/reports.module';
 import { AuditModule } from './modules/audit/audit.module';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { AuditModule } from './modules/audit/audit.module';
         return config;
       },
     }),
+    StorageModule,
     DatabaseModule,
     AuthModule,
     StudentsModule,
