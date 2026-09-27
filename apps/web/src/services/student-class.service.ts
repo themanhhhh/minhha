@@ -22,7 +22,8 @@ export const studentClassService = {
     const body = new FormData();
     files.forEach((file) => body.append('files', file));
     if (note.trim()) body.append('note', note.trim());
-    const response = await apiClient<{ data: { submission: StudentAssignmentSubmission } }>(`/me/assignments/${assignmentId}/submission`, { method: 'POST', body });
+    const response = await apiClient<{ data: { submission?: StudentAssignmentSubmission } }>(`/me/assignments/${assignmentId}/submission`, { method: 'POST', body });
+    if (!response.data.submission) throw new Error('API không trả về thông tin bài nộp.');
     return response.data.submission;
   },
 };
