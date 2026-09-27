@@ -16,14 +16,16 @@ Monorepo TypeScript cho hệ thống quản lý đào tạo Riki.
 ```bash
 pnpm install
 pnpm --filter @riki/api prisma:generate
-pnpm --filter @riki/api prisma:migrate
+pnpm --filter @riki/api prisma:push
 pnpm --filter @riki/api prisma:seed
 pnpm dev
 ```
 
 API health check: `http://localhost:4000/api/v1/health`
 
-Sao chép `.env.example` thành `.env`, điền connection string từ Supabase Dashboard → Connect. Dùng `DATABASE_URL` cho pooled runtime connection và `DIRECT_URL` cho Prisma migration. Supabase thay thế database local nên không cần chạy container SQL Server.
+Sao chép `.env.example` thành `.env`, điền connection string từ Supabase Dashboard → Connect. Backend dùng Supabase PostgreSQL qua Prisma: `DATABASE_URL` là kết nối pooler cho runtime API, còn `DIRECT_URL` là kết nối trực tiếp để chạy migration. Không dùng `SUPABASE_ANON_KEY` thay cho chuỗi kết nối PostgreSQL. Supabase thay thế database local nên không cần chạy container SQL Server.
+
+NestJS sẽ nạp `.env` ở thư mục gốc monorepo (hoặc `apps/api/.env`) và từ chối khởi động nếu thiếu `DATABASE_URL`, `JWT_ACCESS_SECRET` hoặc `JWT_REFRESH_SECRET`. `DIRECT_URL` chỉ bắt buộc khi chạy Prisma migration/seed.
 
 Khởi động API và web bằng Docker sau khi tạo `.env`:
 
@@ -31,7 +33,7 @@ Khởi động API và web bằng Docker sau khi tạo `.env`:
 docker compose up --build
 ```
 
-Prisma migration và seed nên chạy từ máy phát triển hoặc CI có quyền truy cập `DIRECT_URL`.
+`prisma:push` dùng cho lần khởi tạo Supabase hiện tại vì repository chưa có migration history. Khi chuyển sang quy trình migration, tạo migration bằng `prisma:migrate` từ máy phát triển hoặc CI có quyền truy cập `DIRECT_URL`; không chạy migration dev trên database production chưa được baseline.
 
 Frontend có thể chuyển từ mock sang API bằng biến:
 
