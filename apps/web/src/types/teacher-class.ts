@@ -20,3 +20,12 @@ export interface TeacherClass {
   status: TeacherClassStatus;
   theme: ClassTheme;
 }
+
+export interface TeacherClassStudent {
+  id: number;
+  code: string;
+  fullName: string;
+  email: string;
+  attendanceStatus: 'PRESENT' | 'ABSENT' | 'LATE' | null;
+  latestScore: number | null;
+}
