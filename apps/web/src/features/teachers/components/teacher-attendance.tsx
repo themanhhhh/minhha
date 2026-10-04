@@ -18,22 +18,24 @@ import type { AttendanceEntry } from '@/types';
 type AttendanceStatus = AttendanceEntry['status'];
 const statuses: { value: AttendanceStatus; label: string; icon: React.ReactNode }[] = [{ value: 'PRESENT', label: 'Có mặt', icon: <Check className="size-3.5" /> }, { value: 'ABSENT', label: 'Vắng', icon: <X className="size-3.5" /> }, { value: 'LATE', label: 'Đi muộn', icon: <Clock3 className="size-3.5" /> }];
 
-export function TeacherAttendance() {
-  const [classId, setClassId] = useState('1');
-  const [lessonId, setLessonId] = useState('1');
+export function TeacherAttendance({ initialClassId }: { initialClassId?: string } = {}) {
+  const [classId, setClassId] = useState(initialClassId ?? '');
+  const [lessonId, setLessonId] = useState('');
   const [search, setSearch] = useState('');
   const [rows, setRows] = useState<AttendanceEntry[]>([]);
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const { data: classes = [] } = useTeacherClasses({ status: 'ALL' });
   const lessonsQuery = useQuery({ queryKey: ['teacher-lessons', classId], queryFn: () => teacherAssessmentService.getLessons(Number(classId)) });
-  const attendanceQuery = useQuery({ queryKey: ['teacher-attendance', lessonId], queryFn: () => teacherAssessmentService.getAttendance(Number(lessonId)) });
+  const attendanceQuery = useQuery({ queryKey: ['teacher-attendance', lessonId], queryFn: () => teacherAssessmentService.getAttendance(Number(lessonId)), enabled: Boolean(lessonId) });
   useEffect(() => { if (lessonsQuery.data?.[0]) setLessonId(String(lessonsQuery.data[0].id)); }, [lessonsQuery.data]);
   useEffect(() => { if (attendanceQuery.data) setRows(attendanceQuery.data); }, [attendanceQuery.data]);
   const filteredRows = useMemo(() => rows.filter((row) => `${row.fullName} ${row.code}`.toLowerCase().includes(search.toLowerCase())), [rows, search]);
   const summary = useMemo(() => ({ present: rows.filter((row) => row.status === 'PRESENT').length, absent: rows.filter((row) => row.status === 'ABSENT').length, late: rows.filter((row) => row.status === 'LATE').length }), [rows]);
   const currentLesson = lessonsQuery.data?.find((lesson) => lesson.id === Number(lessonId));
   const selectedClass = classes.find((item) => item.id === Number(classId));
+
+  useEffect(() => { if (!classId && classes[0]) setClassId(String(classes[0].id)); }, [classId, classes]);
 
   function setStatus(studentId: number, status: AttendanceStatus) { setSaved(false); setRows((current) => current.map((row) => row.studentId === studentId ? { ...row, status } : row)); }
   function setNote(studentId: number, note: string) { setSaved(false); setRows((current) => current.map((row) => row.studentId === studentId ? { ...row, note } : row)); }

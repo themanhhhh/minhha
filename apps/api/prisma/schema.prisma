@@ -91,6 +91,7 @@ model User {
   fullName      String         @map("full_name") @db.VarChar(200)
   role          UserRole
   status        UserStatus     @default(ACTIVE)
+  lastLoginAt   DateTime?      @map("last_login_at") @db.Timestamptz(3)
   createdAt     DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt     DateTime       @updatedAt @map("updated_at") @db.Timestamptz(3)
   student       Student?
@@ -98,6 +99,7 @@ model User {
   refreshTokens RefreshToken[]
   passwordResetTokens PasswordResetToken[]
   auditLogs     AuditLog[]
+  uploadedMaterials ClassMaterial[]
 
   @@index([role, status])
   @@map("NguoiDung")
@@ -204,6 +206,7 @@ model Class {
   incomingTransfers ClassTransfer[]     @relation("ToClassTransfers")
   reservations      StudyReservation[]
   assignments       Assignment[]
+  materials         ClassMaterial[]
   createdAt         DateTime            @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt         DateTime            @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -271,6 +274,7 @@ model Lesson {
   status      LessonStatus   @default(UPCOMING)
   class       Class          @relation(fields: [classId], references: [id], onDelete: Cascade)
   attendance  Attendance[]
+  materials   ClassMaterial[]
   createdAt   DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt   DateTime       @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -330,9 +334,45 @@ model Assignment {
   updatedAt   DateTime     @updatedAt @map("updated_at") @db.Timestamptz(3)
   class       Class        @relation(fields: [classId], references: [id], onDelete: Cascade)
   submissions AssignmentSubmission[]
+  attachments AssignmentAttachment[]
 
   @@index([classId, dueAt])
   @@map("BaiTap")
+}
+
+model AssignmentAttachment {
+  id           BigInt     @id @default(autoincrement())
+  assignmentId BigInt     @map("assignment_id")
+  storagePath  String     @map("storage_path") @db.VarChar(500)
+  fileName     String     @map("file_name") @db.VarChar(255)
+  mimeType     String     @map("mime_type") @db.VarChar(120)
+  sizeBytes    Int        @map("size_bytes")
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+
+  @@index([assignmentId])
+  @@map("TepBaiTap")
+}
+
+model ClassMaterial {
+  id           BigInt    @id @default(autoincrement())
+  classId      BigInt    @map("class_id")
+  lessonId     BigInt?   @map("lesson_id")
+  createdBy    BigInt?   @map("created_by")
+  title        String    @db.VarChar(200)
+  description  String?   @db.Text
+  storagePath  String    @map("storage_path") @db.VarChar(500)
+  fileName     String    @map("file_name") @db.VarChar(255)
+  mimeType     String    @map("mime_type") @db.VarChar(120)
+  sizeBytes    Int       @map("size_bytes")
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  class        Class     @relation(fields: [classId], references: [id], onDelete: Cascade)
+  lesson       Lesson?   @relation(fields: [lessonId], references: [id], onDelete: SetNull)
+  uploader     User?     @relation(fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([classId, createdAt])
+  @@index([lessonId])
+  @@map("TaiLieuLop")
 }
 
 model AssignmentSubmission {

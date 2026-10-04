@@ -1,24 +1,22 @@
-import { mockStudentClasses } from '@/mocks/student-classes';
-import { mockStudentClassDetails } from '@/mocks/student-class-details';
 import type { StudentAssignmentSubmission, StudentClass, StudentClassDetail, StudentClassStatus } from '@/types';
-import { apiClient, isMockMode } from '@/lib/api-client';
+import { apiClient, type ApiRequest } from '@/lib/api-client';
 
 export interface StudentClassParams { search?: string; status?: StudentClassStatus | 'ALL'; }
 
+function mapClass(value: any): StudentClassDetail {
+  return { ...value, id: Number(value.id), room: value.room ?? 'Chưa xếp phòng', completedLessons: value.completedLessons ?? 0, totalLessons: value.totalLessons ?? value.lessonCount ?? 0, nextLesson: value.nextLesson ?? 'Chưa có lịch', nextLessonTitle: value.nextLessonTitle ?? 'Chưa có lịch', theme: value.theme ?? 'emerald', announcements: value.announcements ?? [], people: (value.people ?? []).map((person: any) => ({ ...person, id: Number(person.id) })) };
+}
+
 export const studentClassService = {
-  async getAll(params: StudentClassParams = {}): Promise<StudentClass[]> {
-    if (!isMockMode) { const query = new URLSearchParams(Object.entries(params).filter(([, value]) => Boolean(value)) as [string, string][]); const response = await apiClient<{ data: StudentClass[] }>(`/me/classes?${query.toString()}`); return response.data; }
-    const search = params.search?.trim().toLowerCase();
-    return mockStudentClasses.filter((item) => (!search || [item.name, item.code, item.teacherName, item.section].some((value) => value.toLowerCase().includes(search))) && (!params.status || params.status === 'ALL' || item.status === params.status));
+  async getAll(params: StudentClassParams = {}, request: ApiRequest = apiClient): Promise<StudentClass[]> {
+    const query = new URLSearchParams(Object.entries(params).filter(([, value]) => Boolean(value)) as [string, string][]);
+    const response = await request<{ data: StudentClass[] }>(`/me/classes?${query.toString()}`);
+    return response.data.map((item) => mapClass(item));
   },
-  async getById(id: number): Promise<StudentClassDetail | null> {
-    if (!isMockMode) return apiClient<StudentClassDetail>(`/me/classes/${id}`);
-    return mockStudentClassDetails.find((item) => item.id === id) ?? (mockStudentClasses.find((item) => item.id === id) ? { ...mockStudentClasses.find((item) => item.id === id)!, announcements: [], works: [], people: [] } : null);
+  async getById(id: number, request: ApiRequest = apiClient): Promise<StudentClassDetail | null> {
+    return mapClass(await request<StudentClassDetail>(`/me/classes/${id}`));
   },
   async submitAssignment(assignmentId: number | string, files: File[], note: string): Promise<StudentAssignmentSubmission> {
-    if (isMockMode) {
-      return { status: 'SUBMITTED', submittedAt: new Date().toISOString(), note, files: files.map((file, index) => ({ id: `mock-${assignmentId}-${index}`, fileName: file.name, mimeType: file.type, sizeBytes: file.size })) };
-    }
     const body = new FormData();
     files.forEach((file) => body.append('files', file));
     if (note.trim()) body.append('note', note.trim());

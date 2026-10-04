@@ -28,7 +28,8 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
     this.failedAttempts.delete(normalizedEmail);
-    return this.createSession(user);
+    const loggedInUser = await this.prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
+    return this.createSession(loggedInUser);
   }
 
   async refresh(refreshToken: string) {

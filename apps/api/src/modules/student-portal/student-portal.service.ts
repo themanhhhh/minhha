@@ -35,7 +35,7 @@ export class StudentPortalService {
 
   async getClasses(user: AuthPayload) {
     const student = await this.getStudent(user);
-    const enrollments = await this.prisma.enrollment.findMany({ where: { studentId: student.id, status: EnrollmentStatus.ACTIVE }, include: { class: { include: { course: true, teacher: { include: { user: true } }, _count: { select: { enrollments: true, lessons: true } } } } }, orderBy: { enrolledAt: 'desc' } });
+    const enrollments = await this.prisma.enrollment.findMany({ where: { studentId: student.id, status: EnrollmentStatus.ACTIVE }, include: { class: { include: { course: true, teacher: { include: { user: true } }, _count: { select: { enrollments: true, lessons: true } }, lessons: { orderBy: [{ lessonDate: 'asc' }, { startTime: 'asc' }] } } } }, orderBy: { enrolledAt: 'desc' } });
     return { data: enrollments.map((item) => this.classResponse(item.class, item.status)) };
   }
 
@@ -49,15 +49,17 @@ export class StudentPortalService {
             course: true,
             teacher: { include: { user: true } },
             _count: { select: { enrollments: true, lessons: true } },
+            enrollments: { where: { status: EnrollmentStatus.ACTIVE }, include: { student: { include: { user: true } } } },
             lessons: { orderBy: { lessonDate: 'asc' } },
             tests: { orderBy: { testDate: 'desc' } },
-            assignments: { orderBy: { dueAt: 'asc' }, include: { submissions: { where: { studentId: student.id }, include: { files: true } } } },
+            assignments: { orderBy: { dueAt: 'asc' }, include: { attachments: true, submissions: { where: { studentId: student.id }, include: { files: true } } } },
+            materials: { orderBy: { createdAt: 'desc' }, include: { lesson: { select: { id: true, title: true } } } },
           },
         },
       },
     });
     if (!enrollment || enrollment.status !== EnrollmentStatus.ACTIVE) throw new ForbiddenException('You are not enrolled in this class');
-    return { ...this.classResponse(enrollment.class, enrollment.status), lessons: enrollment.class.lessons.map((lesson) => this.lessonResponse(lesson)), tests: enrollment.class.tests.map((test) => ({ id: test.id.toString(), name: test.name, type: test.type, testDate: test.testDate, maxScore: Number(test.maxScore) })), assignments: await Promise.all(enrollment.class.assignments.map((assignment) => this.assignmentResponse(assignment))) };
+    return { ...this.classResponse(enrollment.class, enrollment.status), lessons: enrollment.class.lessons.map((lesson) => this.lessonResponse(lesson)), tests: enrollment.class.tests.map((test) => ({ id: test.id.toString(), name: test.name, type: test.type, testDate: test.testDate, maxScore: Number(test.maxScore) })), assignments: await Promise.all(enrollment.class.assignments.map((assignment) => this.assignmentResponse(assignment))), materials: await Promise.all(enrollment.class.materials.map((material) => this.materialResponse(material))) };
   }
 
   async getAssignments(classId: string, user: AuthPayload) {
@@ -68,7 +70,7 @@ export class StudentPortalService {
   async submitAssignment(assignmentId: string, files: Express.Multer.File[], dto: SubmitAssignmentDto, user: AuthPayload) {
     const student = await this.getStudent(user);
     this.validateFiles(files);
-    const assignment = await this.prisma.assignment.findUnique({ where: { id: BigInt(assignmentId) }, include: { class: { select: { id: true } }, submissions: { where: { studentId: student.id }, include: { files: true } } } });
+    const assignment = await this.prisma.assignment.findUnique({ where: { id: BigInt(assignmentId) }, include: { attachments: true, class: { select: { id: true } }, submissions: { where: { studentId: student.id }, include: { files: true } } } });
     if (!assignment) notFound('Assignment', assignmentId);
     const enrollment = await this.prisma.enrollment.findUnique({ where: { studentId_classId: { studentId: student.id, classId: assignment.class.id } } });
     if (!enrollment || enrollment.status !== EnrollmentStatus.ACTIVE) throw new ForbiddenException('You are not enrolled in this class');
@@ -100,7 +102,7 @@ export class StudentPortalService {
       throw error;
     }
 
-    const saved = await this.prisma.assignment.findUnique({ where: { id: assignment.id }, include: { submissions: { where: { studentId: student.id }, include: { files: true } } } });
+    const saved = await this.prisma.assignment.findUnique({ where: { id: assignment.id }, include: { attachments: true, submissions: { where: { studentId: student.id }, include: { files: true } } } });
     return { data: await this.assignmentResponse(saved!) };
   }
 
@@ -140,7 +142,11 @@ export class StudentPortalService {
   }
 
   private classResponse(item: any, enrollmentStatus: EnrollmentStatus) {
-    return { id: item.id.toString(), code: item.code, name: item.name, courseName: item.course.name, level: item.course.level, teacherName: item.teacher.user.fullName, teacherInitials: item.teacher.user.fullName.split(' ').slice(-2).map((part: string) => part[0]).join(''), schedule: item.schedule, room: item.room, studentCount: item._count?.enrollments ?? 0, capacity: item.capacity, lessonCount: item._count?.lessons ?? 0, status: item.status, enrollmentStatus };
+    const lessons = item.lessons ?? [];
+    const completedLessons = lessons.filter((lesson: any) => lesson.status === 'COMPLETED').length;
+    const nextLesson = lessons.find((lesson: any) => lesson.status !== 'CANCELLED' && lesson.lessonDate >= new Date());
+    const people = item.enrollments?.map((enrollment: any) => ({ id: Number(enrollment.student.id), fullName: enrollment.student.user.fullName, initials: enrollment.student.user.fullName.split(' ').slice(-2).map((part: string) => part[0]).join(''), role: 'STUDENT' as const })) ?? [];
+    return { id: item.id.toString(), code: item.code, name: item.name, section: item.course.name, courseName: item.course.name, level: item.course.level, teacherName: item.teacher.user.fullName, teacherInitials: item.teacher.user.fullName.split(' ').slice(-2).map((part: string) => part[0]).join(''), schedule: item.schedule, room: item.room ?? 'Chưa xếp phòng', studentCount: item._count?.enrollments ?? 0, capacity: item.capacity, lessonCount: item._count?.lessons ?? lessons.length, completedLessons, totalLessons: item.course.totalLessons, nextLesson: nextLesson ? `${nextLesson.lessonDate.toISOString().slice(0, 10)} · ${nextLesson.startTime.toISOString().slice(11, 16)}` : 'Chưa có lịch', nextLessonTitle: nextLesson?.title ?? 'Chưa có lịch', status: item.status === 'CANCELLED' ? 'COMPLETED' : item.status, theme: 'emerald' as const, enrollmentStatus, announcements: [], people: [{ id: Number(item.teacher.id), fullName: item.teacher.user.fullName, initials: item.teacher.user.fullName.split(' ').slice(-2).map((part: string) => part[0]).join(''), role: 'TEACHER' as const }, ...people] };
   }
 
   private lessonResponse(item: any) {
@@ -150,7 +156,12 @@ export class StudentPortalService {
   private async assignmentResponse(assignment: any) {
     const submission = assignment.submissions?.[0] ?? null;
     const files = submission ? await Promise.all(submission.files.map(async (file: any) => ({ id: file.id.toString(), fileName: file.fileName, mimeType: file.mimeType, sizeBytes: file.sizeBytes, downloadUrl: await this.storage.createSignedUrl(file.storagePath) }))) : [];
-    return { id: assignment.id.toString(), title: assignment.title, description: assignment.description, dueAt: assignment.dueAt, status: submission?.status ?? (assignment.dueAt < new Date() ? 'OVERDUE' : 'PENDING'), submission: submission ? { id: submission.id.toString(), note: submission.note, status: submission.status, submittedAt: submission.submittedAt, files } : null };
+    const attachments = await Promise.all((assignment.attachments ?? []).map(async (file: any) => ({ id: file.id.toString(), fileName: file.fileName, mimeType: file.mimeType, sizeBytes: file.sizeBytes, downloadUrl: await this.storage.createSignedUrl(file.storagePath) })));
+    return { id: assignment.id.toString(), title: assignment.title, description: assignment.description, dueAt: assignment.dueAt, status: submission?.status ?? (assignment.dueAt < new Date() ? 'OVERDUE' : 'PENDING'), attachments, submission: submission ? { id: submission.id.toString(), note: submission.note, status: submission.status, submittedAt: submission.submittedAt, files } : null };
+  }
+
+  private async materialResponse(material: any) {
+    return { id: material.id.toString(), title: material.title, description: material.description, lessonId: material.lesson?.id?.toString() ?? null, lessonTitle: material.lesson?.title ?? null, fileName: material.fileName, mimeType: material.mimeType, sizeBytes: material.sizeBytes, downloadUrl: await this.storage.createSignedUrl(material.storagePath) };
   }
 
   private validateFiles(files: Express.Multer.File[]) {

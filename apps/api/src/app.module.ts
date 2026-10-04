@@ -14,6 +14,8 @@ import { StudentPortalModule } from './modules/student-portal/student-portal.mod
 import { ReportsModule } from './modules/reports/reports.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { StorageModule } from './storage/storage.module';
+import { TeacherContentModule } from './modules/teacher-content/teacher-content.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { StorageModule } from './storage/storage.module';
       },
     }),
     StorageModule,
+    TeacherContentModule,
+    UsersModule,
     DatabaseModule,
     AuthModule,
     StudentsModule,

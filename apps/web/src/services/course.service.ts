@@ -1,4 +1,4 @@
 import type { Course, PaginatedResponse } from '@/types';
-import { mockCourses } from '@/mocks/courses';
-import { apiClient, isMockMode } from '@/lib/api-client';
-export const courseService = { async getAll(): Promise<PaginatedResponse<Course>> { if (!isMockMode) return apiClient<PaginatedResponse<Course>>('/courses'); return { data: mockCourses, meta: { total: mockCourses.length, page: 1, pageSize: 10 } }; } };
+import { apiClient, type ApiRequest } from '@/lib/api-client';
+interface ApiCourse extends Omit<Course, 'id' | 'lessons'> { id: number | string; totalLessons?: number; lessons?: number; }
+export const courseService = { async getAll(request: ApiRequest = apiClient): Promise<PaginatedResponse<Course>> { const response = await request<{ data: ApiCourse[]; meta: PaginatedResponse<Course>['meta'] }>('/courses'); return { ...response, data: response.data.map((course) => ({ ...course, id: Number(course.id), lessons: course.lessons ?? course.totalLessons ?? 0 })) }; } };

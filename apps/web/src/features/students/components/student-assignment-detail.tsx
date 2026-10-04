@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, BookOpen, CheckCircle2, Clock3, FileText, Paperclip, Upload } from 'lucide-react';
 import { studentClassService } from '@/services';
-import type { ClassWork, StudentAssignment, StudentAssignmentStatus } from '@/types';
+import type { StudentAssignment, StudentAssignmentStatus } from '@/types';
 import { cn } from '@/lib/utils';
 
 const assignmentMeta: Record<StudentAssignmentStatus, { label: string; text: string }> = {
@@ -14,7 +14,7 @@ const assignmentMeta: Record<StudentAssignmentStatus, { label: string; text: str
   LATE: { label: 'Đã nộp trễ', text: 'text-amber-600' },
 };
 
-export function StudentAssignmentDetail({ initialAssignment, classId, className, referenceMaterials = [] }: { initialAssignment: StudentAssignment; classId: number; className: string; referenceMaterials?: ClassWork[] }) {
+export function StudentAssignmentDetail({ initialAssignment, classId, className, referenceMaterials = [] }: { initialAssignment: StudentAssignment; classId: number; className: string; referenceMaterials?: Array<{ id: number | string; title: string }> }) {
   const [assignment, setAssignment] = useState(initialAssignment);
   const [files, setFiles] = useState<File[]>([]);
   const [note, setNote] = useState(initialAssignment.submission?.note ?? '');
@@ -95,6 +95,11 @@ export function StudentAssignmentDetail({ initialAssignment, classId, className,
               <h2 className="text-base font-medium text-slate-700">Hướng dẫn</h2>
               <p className="mt-2 text-base leading-7 text-slate-500">{assignment.description || 'Không có hướng dẫn.'}</p>
             </section>
+
+            {assignment.attachments && assignment.attachments.length > 0 && <section className="mt-9">
+              <h2 className="text-base font-medium text-slate-700">File đề bài</h2>
+              <div className="mt-4 space-y-2">{assignment.attachments.map((file) => file.downloadUrl ? <a key={file.id} href={file.downloadUrl} target="_blank" rel="noreferrer" className="flex items-center gap-3 rounded-md border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-700 transition-colors hover:border-emerald-300 hover:bg-emerald-50"><FileText className="size-5 shrink-0 text-emerald-500" /><span className="min-w-0 flex-1 truncate font-medium">{file.fileName}</span><span className="text-xs text-slate-400">Mở file</span></a> : <div key={file.id} className="flex items-center gap-3 rounded-md border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-700"><FileText className="size-5 shrink-0 text-emerald-500" /><span className="min-w-0 flex-1 truncate font-medium">{file.fileName}</span></div>)}</div>
+            </section>}
 
             <section className="mt-12">
               <h2 className="text-base font-medium text-slate-700">Tài liệu tham khảo</h2>

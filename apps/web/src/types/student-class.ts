@@ -28,5 +28,6 @@ export interface ClassWork { id: number; title: string; type: 'LESSON' | 'ASSIGN
 export interface ClassPerson { id: number; fullName: string; initials: string; role: 'TEACHER' | 'STUDENT'; }
 export interface StudentAssignmentFile { id: number | string; fileName: string; mimeType: string; sizeBytes: number; downloadUrl?: string; }
 export interface StudentAssignmentSubmission { id?: number | string; note?: string | null; status: Exclude<StudentAssignmentStatus, 'PENDING' | 'OVERDUE'>; submittedAt: string; files: StudentAssignmentFile[]; }
-export interface StudentAssignment { id: number | string; title: string; description?: string | null; dueAt: string; status: StudentAssignmentStatus; submission?: StudentAssignmentSubmission | null; }
-export interface StudentClassDetail extends StudentClass { announcements: ClassAnnouncement[]; works?: ClassWork[]; assignments?: StudentAssignment[]; people: ClassPerson[]; }
+export interface StudentAssignment { id: number | string; title: string; description?: string | null; dueAt: string; status: StudentAssignmentStatus; attachments?: StudentAssignmentFile[]; submission?: StudentAssignmentSubmission | null; }
+export interface StudentClassMaterial extends StudentAssignmentFile { title: string; description?: string | null; lessonId?: number | string | null; lessonTitle?: string | null; }
+export interface StudentClassDetail extends StudentClass { announcements: ClassAnnouncement[]; works?: ClassWork[]; assignments?: StudentAssignment[]; materials?: StudentClassMaterial[]; people: ClassPerson[]; }

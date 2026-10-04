@@ -13,10 +13,25 @@ import { UpdateLessonDto } from './dto/update-lesson.dto';
 export class LessonsService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async findAll(query: ListLessonDto, user: AuthPayload) {
+    const pagination = normalizePagination(query);
+    const where: Prisma.LessonWhereInput = {
+      status: query.status ?? { not: LessonStatus.CANCELLED },
+      ...(query.fromDate || query.toDate ? { lessonDate: { ...(query.fromDate ? { gte: this.toDateOnly(query.fromDate) } : {}), ...(query.toDate ? { lte: this.toDateOnly(query.toDate) } : {}) } } : {}),
+      ...(user.role === UserRole.TEACHER ? { class: { teacher: { userId: BigInt(user.sub) } } } : {}),
+      ...(user.role === UserRole.STUDENT ? { class: { enrollments: { some: { student: { userId: BigInt(user.sub) }, status: 'ACTIVE' } } } } : {}),
+    };
+    const [lessons, total] = await this.prisma.$transaction([
+      this.prisma.lesson.findMany({ where, include: { class: true, _count: { select: { attendance: true } } }, orderBy: [{ lessonDate: 'asc' }, { startTime: 'asc' }], skip: pagination.skip, take: pagination.take }),
+      this.prisma.lesson.count({ where }),
+    ]);
+    return { data: lessons.map((lesson) => this.toResponse(lesson)), meta: paginationMeta(pagination.page, pagination.pageSize, total) };
+  }
+
   async findByClass(classId: string, query: ListLessonDto, user: AuthPayload) {
     await this.assertClassAccess(classId, user, false);
     const pagination = normalizePagination(query);
-    const where: Prisma.LessonWhereInput = { classId: BigInt(classId), ...(query.status ? { status: query.status } : {}), ...(query.fromDate || query.toDate ? { lessonDate: { ...(query.fromDate ? { gte: this.toDateOnly(query.fromDate) } : {}), ...(query.toDate ? { lte: this.toDateOnly(query.toDate) } : {}) } } : {}) };
+    const where: Prisma.LessonWhereInput = { classId: BigInt(classId), status: query.status ?? { not: LessonStatus.CANCELLED }, ...(query.fromDate || query.toDate ? { lessonDate: { ...(query.fromDate ? { gte: this.toDateOnly(query.fromDate) } : {}), ...(query.toDate ? { lte: this.toDateOnly(query.toDate) } : {}) } } : {}) };
     const [lessons, total] = await this.prisma.$transaction([this.prisma.lesson.findMany({ where, include: { class: true, _count: { select: { attendance: true } } }, orderBy: [{ lessonDate: 'asc' }, { startTime: 'asc' }], skip: pagination.skip, take: pagination.take }), this.prisma.lesson.count({ where })]);
     return { data: lessons.map((lesson) => this.toResponse(lesson)), meta: paginationMeta(pagination.page, pagination.pageSize, total) };
   }
@@ -67,5 +82,5 @@ export class LessonsService {
   private toTime(value: string) { return new Date(`1970-01-01T${value}:00.000Z`); }
   private formatDate(value: Date) { return value.toISOString().slice(0, 10); }
   private formatTime(value: Date) { return value.toISOString().slice(11, 16); }
-  private toResponse(lesson: any) { return { id: lesson.id.toString(), classId: lesson.classId.toString(), classCode: lesson.class.code, className: lesson.class.name, title: lesson.title, lessonDate: lesson.lessonDate, startTime: this.formatTime(lesson.startTime), endTime: this.formatTime(lesson.endTime), content: lesson.content, recordUrl: lesson.recordUrl, status: lesson.status, attendanceCount: lesson._count?.attendance ?? 0 }; }
+  private toResponse(lesson: any) { return { id: lesson.id.toString(), classId: lesson.classId.toString(), classCode: lesson.class.code, className: lesson.class.name, room: lesson.class.room, title: lesson.title, lessonDate: lesson.lessonDate, startTime: this.formatTime(lesson.startTime), endTime: this.formatTime(lesson.endTime), content: lesson.content, recordUrl: lesson.recordUrl, status: lesson.status, attendanceCount: lesson._count?.attendance ?? 0 }; }
 }
