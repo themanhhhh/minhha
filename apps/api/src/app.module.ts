@@ -16,6 +16,7 @@ import { AuditModule } from './modules/audit/audit.module';
 import { StorageModule } from './storage/storage.module';
 import { TeacherContentModule } from './modules/teacher-content/teacher-content.module';
 import { UsersModule } from './modules/users/users.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { UsersModule } from './modules/users/users.module';
     StorageModule,
     TeacherContentModule,
     UsersModule,
+    NotificationsModule,
     DatabaseModule,
     AuthModule,
     StudentsModule,

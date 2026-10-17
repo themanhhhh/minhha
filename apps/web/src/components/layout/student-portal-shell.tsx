@@ -16,6 +16,7 @@ import { navigationByRole } from '@/config/navigation';
 import { cn } from '@/lib/utils';
 import { authService } from '@/services';
 import type { AuthUser } from '@/types';
+import { StudentHeader } from './student-header';
 
 const icons = {
   'layout-dashboard': LayoutDashboard,
@@ -88,6 +89,7 @@ export function StudentPortalShell({ user, children }: { user: AuthUser; childre
       </aside>
 
       <main className="min-w-0 flex-1 lg:ml-56">
+        <StudentHeader />
         <div className="min-h-screen px-4 py-6 pb-24 sm:px-6 sm:py-8 lg:px-10 lg:py-10 lg:pb-10">{children}</div>
       </main>
 

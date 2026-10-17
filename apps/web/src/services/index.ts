@@ -16,3 +16,4 @@ export * from './teacher-profile.service';
 export * from './teacher-assessment.service';
 export * from './user-account.service';
 export * from './director.service';
+export * from './notification.service';

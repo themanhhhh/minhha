@@ -1,5 +1,5 @@
 import { BadRequestException, ConflictException, ForbiddenException, Injectable } from '@nestjs/common';
-import { ClassStatus, LessonStatus, Prisma, UserRole } from '@prisma/client';
+import { ClassStatus, LessonStatus, NotificationType, Prisma, UserRole } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { normalizePagination, paginationMeta } from '../../common/pagination';
 import { notFound } from '../../common/http-errors';
@@ -8,10 +8,11 @@ import { CreateLessonDto } from './dto/create-lesson.dto';
 import { ListLessonDto } from './dto/list-lesson.dto';
 import { RecordLessonDto } from './dto/record-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class LessonsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly notifications: NotificationsService) {}
 
   async findAll(query: ListLessonDto, user: AuthPayload) {
     const pagination = normalizePagination(query);
@@ -49,6 +50,7 @@ export class LessonsService {
     const classRoom = await this.getClass(dto.classId);
     await this.assertNoScheduleConflict(classRoom, dto.lessonDate, dto.startTime, dto.endTime);
     const lesson = await this.prisma.lesson.create({ data: { classId: BigInt(dto.classId), title: dto.title, lessonDate: this.toDateOnly(dto.lessonDate), startTime: this.toTime(dto.startTime), endTime: this.toTime(dto.endTime), content: dto.content, recordUrl: dto.recordUrl, status: dto.status ?? LessonStatus.UPCOMING }, include: { class: true, _count: { select: { attendance: true } } } });
+    await this.notifications.notifyClassStudents(lesson.classId, { type: NotificationType.LESSON_CREATED, title: 'Có buổi học mới', body: `Lớp học có buổi học mới: ${lesson.title}.`, actionUrl: `/student/classes/${lesson.classId.toString()}`, entity: 'Lesson', entityId: lesson.id, dedupeKey: `lesson:${lesson.id.toString()}:created` });
     return this.toResponse(lesson);
   }
 
@@ -62,7 +64,9 @@ export class LessonsService {
     this.assertTimeRange(startTime, endTime);
     const classRoom = await this.getClass(classId);
     await this.assertNoScheduleConflict(classRoom, dto.lessonDate ?? this.formatDate(current.lessonDate), startTime, endTime, BigInt(id));
+    const changed = dto.classId !== undefined || dto.title !== undefined || dto.lessonDate !== undefined || dto.startTime !== undefined || dto.endTime !== undefined || dto.content !== undefined || dto.status !== undefined;
     const lesson = await this.prisma.lesson.update({ where: { id: BigInt(id) }, data: { ...(dto.classId ? { classId: BigInt(dto.classId) } : {}), ...(dto.title ? { title: dto.title } : {}), ...(dto.lessonDate ? { lessonDate: this.toDateOnly(dto.lessonDate) } : {}), ...(dto.startTime ? { startTime: this.toTime(dto.startTime) } : {}), ...(dto.endTime ? { endTime: this.toTime(dto.endTime) } : {}), ...(dto.content !== undefined ? { content: dto.content } : {}), ...(dto.recordUrl !== undefined ? { recordUrl: dto.recordUrl } : {}), ...(dto.status ? { status: dto.status } : {}) }, include: { class: true, _count: { select: { attendance: true } } } });
+    if (changed) { const draft = { type: NotificationType.LESSON_UPDATED, title: 'Buổi học đã được cập nhật', body: `Thông tin buổi học "${lesson.title}" đã thay đổi.`, actionUrl: `/student/classes/${lesson.classId.toString()}`, entity: 'Lesson', entityId: lesson.id, dedupeKey: `lesson:${lesson.id.toString()}:updated:${lesson.updatedAt.toISOString()}` }; await this.notifications.notifyClassStudents(lesson.classId, draft); if (current.classId !== lesson.classId) await this.notifications.notifyClassStudents(current.classId, { ...draft, actionUrl: `/student/classes/${current.classId.toString()}` }); }
     return this.toResponse(lesson);
   }
 

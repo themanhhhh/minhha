@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { ClassStatus, EnrollmentStatus, LessonStatus, UserRole } from '@prisma/client';
+import { ClassStatus, EnrollmentStatus, LessonStatus, NotificationType, UserRole } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { SupabaseStorageService } from '../../storage/supabase-storage.service';
 import { notFound } from '../../common/http-errors';
@@ -8,6 +8,7 @@ import type { AuthPayload } from '../auth/auth.types';
 import { CreateTeacherAssignmentDto } from './dto/create-assignment.dto';
 import { CreateClassMaterialDto } from './dto/create-material.dto';
 import { randomUUID } from 'node:crypto';
+import { NotificationsService } from '../notifications/notifications.service';
 
 const MAX_ASSIGNMENT_FILES = 5;
 const MAX_ASSIGNMENT_FILE_SIZE = 10 * 1024 * 1024;
@@ -36,6 +37,7 @@ export class TeacherContentService {
     private readonly prisma: PrismaService,
     private readonly storage: SupabaseStorageService,
     private readonly access: TeachingAccessService,
+    private readonly notifications: NotificationsService,
   ) {}
 
   async getTeacherClasses(user: AuthPayload) {
@@ -122,6 +124,7 @@ export class TeacherContentService {
     }
 
     const saved = await this.prisma.assignment.findUnique({ where: { id: assignment.id }, include: { attachments: true, _count: { select: { submissions: true } } } });
+    await this.notifications.notifyClassStudents(classId, { type: NotificationType.ASSIGNMENT_CREATED, title: 'Bài tập mới được đăng', body: `Lớp học có bài tập mới: ${assignment.title}.`, actionUrl: `/student/classes/${classId}/assignments/${assignment.id.toString()}`, entity: 'Assignment', entityId: assignment.id, createdById: user.sub, dedupeKey: `assignment:${assignment.id.toString()}` });
     return { data: await this.assignmentResponse(saved!) };
   }
 
@@ -145,6 +148,7 @@ export class TeacherContentService {
         data: { classId: BigInt(classId), lessonId, createdBy: BigInt(user.sub), title: dto.title.trim(), description: dto.description?.trim() || null, storagePath, fileName: file.originalname.slice(0, 255), mimeType: file.mimetype, sizeBytes: file.size },
         include: { lesson: { select: { id: true, title: true } } },
       });
+      await this.notifications.notifyClassStudents(classId, { type: NotificationType.MATERIAL_PUBLISHED, title: 'Tài liệu mới được đăng', body: `Lớp học có tài liệu mới: ${material.title}.`, actionUrl: `/student/classes/${classId}`, entity: 'ClassMaterial', entityId: material.id, createdById: user.sub, dedupeKey: `material:${material.id.toString()}` });
       return { data: await this.materialResponse(material) };
     } catch (error) {
       try { await this.storage.remove([storagePath]); } catch { /* Preserve the original failure. */ }

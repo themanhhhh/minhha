@@ -11,3 +11,4 @@ export * from './teacher-profile';
 export * from './teacher-assessment';
 export * from './user-account';
 export * from './director';
+export * from './notification';

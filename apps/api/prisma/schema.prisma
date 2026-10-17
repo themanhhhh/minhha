@@ -84,6 +84,18 @@ enum SubmissionStatus {
   LATE
 }
 
+enum NotificationType {
+  ASSIGNMENT_CREATED
+  MATERIAL_PUBLISHED
+  LESSON_CREATED
+  LESSON_UPDATED
+  SCORE_PUBLISHED
+  ATTENDANCE_ALERT
+  CLASS_ENROLLED
+  BROADCAST
+  SYSTEM
+}
+
 model User {
   id            BigInt         @id @default(autoincrement())
   email         String         @unique @db.VarChar(320)
@@ -100,6 +112,8 @@ model User {
   passwordResetTokens PasswordResetToken[]
   auditLogs     AuditLog[]
   uploadedMaterials ClassMaterial[]
+  notifications Notification[] @relation("NotificationRecipient")
+  createdNotifications Notification[] @relation("NotificationCreator")
 
   @@index([role, status])
   @@map("NguoiDung")
@@ -421,4 +435,26 @@ model AuditLog {
   @@index([entity, entityId])
   @@index([actorId, createdAt])
   @@map("AuditLog")
+}
+
+model Notification {
+  id          BigInt           @id @default(autoincrement())
+  recipientId BigInt           @map("recipient_id")
+  createdById BigInt?          @map("created_by_id")
+  type        NotificationType
+  title       String           @db.VarChar(200)
+  body        String           @db.Text
+  actionUrl   String?          @map("action_url") @db.VarChar(500)
+  entity      String?          @db.VarChar(100)
+  entityId    String?          @map("entity_id") @db.VarChar(100)
+  metadata    Json?
+  dedupeKey   String?          @unique @map("dedupe_key") @db.VarChar(255)
+  readAt      DateTime?        @map("read_at") @db.Timestamptz(3)
+  createdAt   DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  recipient   User             @relation("NotificationRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  createdBy   User?            @relation("NotificationCreator", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([recipientId, readAt, createdAt])
+  @@index([recipientId, createdAt])
+  @@map("ThongBao")
 }
