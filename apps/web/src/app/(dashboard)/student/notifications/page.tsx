@@ -51,7 +51,17 @@ export default function StudentNotificationsPage() {
 }
 
 function NotificationRow({ notification, onOpen }: { notification: Notification; onOpen: () => void }) {
-  return <button type="button" onClick={onOpen} className={`flex w-full items-start gap-4 px-5 py-5 text-left transition-colors hover:bg-emerald-50/40 sm:px-6 ${notification.readAt ? 'bg-white' : 'bg-emerald-50/30'}`}><div className={`mt-0.5 grid size-10 shrink-0 place-items-center rounded-xl ${notification.readAt ? 'bg-slate-100 text-slate-400' : 'bg-emerald-100 text-emerald-600'}`}><Bell className="size-5" /></div><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><p className={`text-sm ${notification.readAt ? 'font-medium text-slate-700' : 'font-semibold text-slate-900'}`}>{notification.title}</p>{!notification.readAt && <Badge variant="success">Mới</Badge>}</div><p className="mt-1 text-sm leading-6 text-slate-500">{notification.body}</p><p className="mt-2 text-xs text-slate-400">{formatDate(notification.createdAt)}{notification.type !== 'SYSTEM' ? ` · ${typeLabel(notification.type)}` : ''}</p></div><span className={`mt-2 size-2 shrink-0 rounded-full ${notification.readAt ? 'bg-slate-200' : 'bg-emerald-500'}`} /></button>;
+  const classLabel = notificationClassLabel(notification.metadata);
+  return <button type="button" onClick={onOpen} className={`flex w-full items-start gap-4 px-5 py-5 text-left transition-colors hover:bg-emerald-50/40 sm:px-6 ${notification.readAt ? 'bg-white' : 'bg-emerald-50/30'}`}><div className={`mt-0.5 grid size-10 shrink-0 place-items-center rounded-xl ${notification.readAt ? 'bg-slate-100 text-slate-400' : 'bg-emerald-100 text-emerald-600'}`}><Bell className="size-5" /></div><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><p className={`text-sm ${notification.readAt ? 'font-medium text-slate-700' : 'font-semibold text-slate-900'}`}>{notification.title}</p>{!notification.readAt && <Badge variant="success">Mới</Badge>}</div>{classLabel && <p className="mt-1 text-xs font-medium text-emerald-600">Lớp: {classLabel}</p>}<p className="mt-1 text-sm leading-6 text-slate-500">{notification.body}</p><p className="mt-2 text-xs text-slate-400">{formatDate(notification.createdAt)}{notification.type !== 'SYSTEM' ? ` · ${typeLabel(notification.type)}` : ''}</p></div><span className={`mt-2 size-2 shrink-0 rounded-full ${notification.readAt ? 'bg-slate-200' : 'bg-emerald-500'}`} /></button>;
+}
+
+function notificationClassLabel(metadata: unknown): string | null {
+  if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) return null;
+  const source = metadata as Record<string, unknown>;
+  const name = typeof source.className === 'string' ? source.className.trim() : '';
+  const code = typeof source.classCode === 'string' ? source.classCode.trim() : '';
+  if (name && code && name !== code) return `${name} (${code})`;
+  return name || code || null;
 }
 
 function typeLabel(type: NotificationType) {
