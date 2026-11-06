@@ -1,0 +1,84 @@
+{
+  "checkedAt": "2026-11-06T09:31:23.391Z",
+  "totals": {
+    "users": 46,
+    "students": 36,
+    "students_missing_dob": 0,
+    "users_exceed_doc_length": 0,
+    "phones_exceed_doc_length": 0,
+    "teachers_with_phone": 8,
+    "duplicate_phone_groups": 0,
+    "lessons": 156,
+    "lessons_exceed_doc_length": 0,
+    "classes_exceed_doc_length": 0,
+    "late_attendance": 228,
+    "tests_non_ten_scale": 0,
+    "scores_outside_ten": 0,
+    "reservations": 0,
+    "transfers": 0,
+    "assignments": 27,
+    "submissions": 0,
+    "materials": 0,
+    "notifications": 19
+  },
+  "groups": {
+    "roles": [
+      {
+        "value": "TEACHER",
+        "count": 8
+      },
+      {
+        "value": "DIRECTOR",
+        "count": 1
+      },
+      {
+        "value": "STUDENT",
+        "count": 36
+      },
+      {
+        "value": "ACADEMIC_STAFF",
+        "count": 1
+      }
+    ],
+    "accountStatuses": [
+      {
+        "value": "ACTIVE",
+        "count": 46
+      }
+    ],
+    "enrollments": [
+      {
+        "value": "ACTIVE",
+        "count": 169
+      },
+      {
+        "value": "COMPLETED",
+        "count": 14
+      }
+    ],
+    "testTypes": [
+      {
+        "value": "MIDTERM",
+        "count": 13
+      },
+      {
+        "value": "QUIZ",
+        "count": 13
+      },
+      {
+        "value": "FINAL",
+        "count": 13
+      }
+    ],
+    "lessonStatuses": [
+      {
+        "value": "COMPLETED",
+        "count": 90
+      },
+      {
+        "value": "UPCOMING",
+        "count": 66
+      }
+    ]
+  }
+}

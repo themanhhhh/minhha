@@ -16,16 +16,17 @@ Monorepo TypeScript cho hệ thống quản lý đào tạo Riki.
 ```bash
 pnpm install
 pnpm --filter @riki/api prisma:generate
-pnpm --filter @riki/api prisma:push
-pnpm --filter @riki/api prisma:seed
+pnpm --filter @riki/api prisma:deploy
 pnpm dev
 ```
 
 API health check: `http://localhost:4000/api/v1/health`
 
-Sao chép `.env.example` thành `.env`, điền connection string từ Supabase Dashboard → Connect. Backend dùng Supabase PostgreSQL qua Prisma: `DATABASE_URL` là kết nối pooler cho runtime API, còn `DIRECT_URL` là kết nối trực tiếp để chạy migration. Không dùng `SUPABASE_ANON_KEY` thay cho chuỗi kết nối PostgreSQL. Supabase thay thế database local nên không cần chạy container SQL Server.
+Sao chép `.env.example` thành `.env`, điền connection string từ Supabase Dashboard → Connect. Backend NestJS chạy liên tục dùng `DATABASE_URL` qua **session pooler, cổng 5432**; `DIRECT_URL` dùng cho migration (có thể dùng session pooler nếu máy không truy cập được endpoint direct). Cấu hình hiện tại đã được kiểm tra với session pooler sau khi transaction pooler cổng 6543 phát sinh timeout. Không dùng `SUPABASE_ANON_KEY` thay cho chuỗi kết nối PostgreSQL. Supabase thay thế database local nên không cần chạy container SQL Server.
 
 NestJS sẽ nạp `.env` ở thư mục gốc monorepo (hoặc `apps/api/.env`) và từ chối khởi động nếu thiếu `DATABASE_URL`, `JWT_ACCESS_SECRET` hoặc `JWT_REFRESH_SECRET`. `DIRECT_URL` chỉ bắt buộc khi chạy Prisma migration/seed.
+
+`DATABASE_POOL_MODE=session` cố định session pooler cổng 5432 khi hostname là Supabase pooler, kể cả terminal có sẵn DATABASE_URL cổng 6543. URL của PostgreSQL khác và database thử nghiệm không bị đổi cổng. API ưu tiên `apps/api/.env` rồi `.env` gốc, độc lập thư mục chạy lệnh.
 
 ## Student Assignment Uploads
 
@@ -50,7 +51,15 @@ Khởi động API và web bằng Docker sau khi tạo `.env`:
 docker compose up --build
 ```
 
-`prisma:push` dùng cho lần khởi tạo Supabase hiện tại vì repository chưa có migration history. Khi chuyển sang quy trình migration, tạo migration bằng `prisma:migrate` từ máy phát triển hoặc CI có quyền truy cập `DIRECT_URL`; không chạy migration dev trên database production chưa được baseline.
+Database đã có migration history: `0_baseline` và `202611060001_document_schema`. Database hiện tại đã được baseline và chuyển đổi; chỉ dùng `prisma:deploy` để áp dụng migration mới, không baseline hoặc chạy lại script cutover trên database đã chuyển đổi. `prisma:push` được chặn vì không tạo các trigger đồng bộ danh mục, ngày giờ và sĩ số. Chỉ chạy `prisma:seed` trên database phát triển/demo riêng; seed có thể đổi mật khẩu tài khoản demo.
+
+Thiết kế hiện có 26 bảng ứng dụng: 17 bảng theo tài liệu và 9 bảng mở rộng. Các FK số theo tài liệu là ràng buộc thật; mã vai trò/trạng thái/trình độ và các cột ngày/giờ cũ được giữ để tương thích API, có trigger kiểm tra và đồng bộ hai chiều. Chi tiết mapping ở `database-schema.md` và kết quả triển khai ở `database-implementation.md`.
+
+Học vụ truy cập **Đào tạo → Cập nhật đào tạo** (`/academic/data`) để thêm/sửa hồ sơ, khóa học, lớp, buổi học, ghi danh, bảo lưu, quay lại, hủy bảo lưu, chuyển lớp và cấu hình trọng số. Trọng số đã chọn: QUIZ 10%, MIDTERM 40%, FINAL 50%, JLPT 0%. Tổng kết chỉ có khi đủ bài/loại bắt buộc; kết quả chưa đủ được ghi là tạm tính. Thay đổi trọng số áp dụng toàn hệ thống và được ghi audit.
+
+Sĩ số hiện tại đếm ghi danh ACTIVE, do trigger duy trì. Bảo lưu giải phóng chỗ; quay lại phải còn chỗ. Bảo lưu hiện áp dụng ngay từ ngày thực hiện, thời hạn theo tháng lịch; học vụ thực hiện trực tiếp, chưa có luồng yêu cầu tương lai từ học viên. Job kiểm tra hết hạn chạy mỗi phút khi API hoạt động và có thể chạy lại bằng nút trong màn hình học vụ. Chuyển lớp thực hiện giữa hai lớp cùng cấp JLPT; điểm và điểm danh lịch sử giữ nguyên lớp gốc.
+
+Backup chứa dữ liệu riêng tư được lưu trong `.backups/`, đã loại khỏi Git; không đưa lên repo. Các báo cáo `database-migration-rehearsal.json`, `database-api-smoke.json` và `database-migration-applied.json` chỉ chứa kết quả kiểm tra và số lượng. Script kiểm thử ghi dữ liệu chỉ cho phép API bản sao trên `127.0.0.1:4010`.
 
 Frontend có thể chuyển từ mock sang API bằng biến:
 
@@ -64,7 +73,7 @@ Backend test foundation:
 pnpm --filter @riki/api test
 ```
 
-Authentication/RBAC đã có module scaffold; login thật và persistence refresh token sẽ được nối vào Prisma ở MVP Core tiếp theo.
+Authentication/RBAC dùng dữ liệu thật, refresh token được lưu băm trong PostgreSQL. API kiểm tra trạng thái và vai trò hiện tại của tài khoản; token không tiếp tục sử dụng khi tài khoản bị khóa hoặc đổi vai trò.
 
 ## Backend Authentication
 

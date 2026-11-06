@@ -11,7 +11,14 @@ export async function apiClient<T>(path: string, options?: RequestInit): Promise
     localStorage.removeItem('riki-auth');
     window.location.assign('/login');
   }
-  if (!response.ok) throw new Error(`API request failed: ${response.status}`);
+  if (!response.ok) {
+    let message = 'Không thể thực hiện yêu cầu. Vui lòng thử lại.';
+    try {
+      const detail = await response.json() as { message?: string | string[] };
+      if (detail.message && response.status < 500) message = Array.isArray(detail.message) ? detail.message.join('. ') : detail.message;
+    } catch { /* Keep the user-facing fallback for non-JSON gateway responses. */ }
+    throw new Error(message);
+  }
   if (response.status === 204) return undefined as T;
   return response.json() as Promise<T>;
 }

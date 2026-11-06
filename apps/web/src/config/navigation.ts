@@ -14,12 +14,13 @@ export const navigationByRole: Record<UserRole, NavGroup[]> = {
   TEACHER: [
     { label: 'Tổng quan', items: [{ label: 'Dashboard', href: '/teacher/dashboard', icon: 'layout-dashboard' }] },
     { label: 'Giảng dạy', items: [{ label: 'Lớp phụ trách', href: '/teacher/classes', icon: 'book-open' }, { label: 'Điểm danh', href: '/teacher/attendance', icon: 'clipboard-check' }, { label: 'Nhập điểm', href: '/teacher/scores', icon: 'chart-no-axes-combined' }] },
+    { label: 'Dạy thay', items: [{ label: 'Buổi dạy thay', href: '/teacher/substitutions', icon: 'calendar-days' }] },
     { label: 'Tài khoản', items: [{ label: 'Hồ sơ cá nhân', href: '/teacher/profile', icon: 'user-round' }] },
   ],
   ACADEMIC_STAFF: [
     { label: 'Tổng quan', items: [{ label: 'Dashboard', href: '/academic/dashboard', icon: 'layout-dashboard' }] },
     { label: 'Quản lý', items: [{ label: 'Học viên', href: '/academic/students', icon: 'users-round' }, { label: 'Giáo viên', href: '/academic/teachers', icon: 'graduation-cap' }, { label: 'Khóa học', href: '/academic/courses', icon: 'library' }, { label: 'Lớp học', href: '/academic/classes', icon: 'school' }, { label: 'Tài khoản', href: '/academic/users', icon: 'shield-check' }] },
-    { label: 'Đào tạo', items: [{ label: 'Buổi học', href: '/academic/lessons', icon: 'calendar-days' }] },
+    { label: 'Đào tạo', items: [{ label: 'Buổi học', href: '/academic/lessons', icon: 'calendar-days' }, { label: 'Cập nhật đào tạo', href: '/academic/data', icon: 'clipboard-check' }] },
   ],
   DIRECTOR: [
     { label: 'Tổng quan', items: [{ label: 'Dashboard', href: '/director/dashboard', icon: 'layout-dashboard' }] },

@@ -7,8 +7,12 @@ export interface Student {
   fullName: string;
   email: string;
   phone?: string;
-  currentLevel: JLPTLevel;
-  targetLevel: JLPTLevel;
+  dateOfBirth?: string;
+  goal?: string | null;
+  emergencyContact?: string | null;
+  accountStatus?: string;
+  currentLevel: JLPTLevel | null;
+  targetLevel: JLPTLevel | null;
   className: string;
   status: StudentStatus;
   attendanceRate: number;

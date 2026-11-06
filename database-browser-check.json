@@ -1,0 +1,13 @@
+{
+  "checkedAt": "2026-11-06T10:45:46.708Z",
+  "readOnly": true,
+  "checks": [
+    "Documented student fields render",
+    "Class meeting URL editor renders",
+    "Live 10/40/50 weights render correctly",
+    "Reservation and transfer controls render",
+    "390px mobile viewport has no horizontal overflow",
+    "Teacher substitute-lesson page renders with correct empty state",
+    "No browser runtime exceptions"
+  ]
+}

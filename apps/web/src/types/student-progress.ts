@@ -8,6 +8,7 @@ export interface AttendanceSummary {
 
 export interface ScoreSummary {
   average: number;
+  grading?: { method: 'WEIGHTED' | 'UNCONFIGURED'; provisional: boolean; finalAverage: number | null };
   highest: number;
   completedTests: number;
   subjects: { name: string; score: number }[];

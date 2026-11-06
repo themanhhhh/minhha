@@ -197,7 +197,7 @@ export class TeacherContentService {
       section: classRoom.course.name,
       schedule: classRoom.schedule,
       room: classRoom.room ?? 'Chưa xếp phòng',
-      studentCount: classRoom._count.enrollments,
+      meetingUrl: classRoom.meetingUrl, session: classRoom.session, studentCount: classRoom.studentCount,
       capacity: classRoom.capacity,
       completedLessons,
       totalLessons: classRoom.course.totalLessons,

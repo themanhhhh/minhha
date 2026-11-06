@@ -9,3 +9,5 @@ dist/
 coverage/
 prisma/*.db
 *.tsbuildinfo
+.backups/
+.migration-work/

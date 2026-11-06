@@ -24,8 +24,8 @@ const demos = [
 ];
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("student@riki.vn");
-  const [password, setPassword] = useState("12345678");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   async function submit(event: FormEvent) {

@@ -3,11 +3,12 @@ import { ClassStatus, EnrollmentStatus, Prisma, UserRole, UserStatus } from '@pr
 import { PrismaService } from '../../database/prisma.service';
 import { notFound } from '../../common/http-errors';
 import type { AuthPayload } from '../auth/auth.types';
+import { GradeService } from '../academic-data/grade.service';
 import { ReportFilterDto } from './dto/report-filter.dto';
 
 @Injectable()
 export class ReportsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly grades: GradeService) {}
 
   async getDashboard(user: AuthPayload) {
     const activities = await this.dashboardActivities();
@@ -44,13 +45,14 @@ export class ReportsService {
       this.prisma.score.findMany({ where: { studentId: student.id }, select: { value: true } }),
     ]);
     const attended = attendance.filter((record) => record.status === 'PRESENT' || record.status === 'LATE').length;
-    const average = scores.length ? (scores.reduce((sum, score) => sum + Number(score.value), 0) / scores.length).toFixed(1) : '0.0';
+    const grading = await this.grades.summarize({ class: { enrollments: { some: { studentId: student.id } } } }, student.id);
+    const average = grading.average.toFixed(1);
     return {
       stats: [
         { label: 'Khóa đang học', value: String(student.enrollments.length).padStart(2, '0'), change: student.enrollments[0]?.class.course.name ?? 'Chưa có lớp', trend: 'neutral', icon: 'book' },
         { label: 'Trình độ hiện tại', value: student.currentLevel ?? '-', change: `Mục tiêu ${student.targetLevel ?? '-'}`, trend: 'up', icon: 'target' },
         { label: 'Tỷ lệ chuyên cần', value: `${attendance.length ? Math.round((attended / attendance.length) * 100) : 0}%`, change: `${attended}/${attendance.length} lượt hợp lệ`, trend: 'neutral', icon: 'check' },
-        { label: 'Điểm trung bình', value: average, change: `${scores.length} bài đã chấm`, trend: 'neutral', icon: 'chart' },
+        { label: grading.provisional ? 'Điểm tạm tính' : 'Điểm tổng kết', value: average, change: `${scores.length} bài đã chấm · 10/40/50`, trend: 'neutral', icon: 'chart' },
       ],
       schedule: await this.scheduleFor({ class: { enrollments: { some: { studentId: student.id, status: EnrollmentStatus.ACTIVE } } } }),
       activities,
@@ -69,7 +71,7 @@ export class ReportsService {
     const pendingScores = tests.filter((test) => test._count.scores < test.class._count.enrollments).length;
     return {
       stats: [
-        { label: 'Lớp phụ trách', value: String(classes.length).padStart(2, '0'), change: `${classes.reduce((sum, item) => sum + item._count.enrollments, 0)} học viên`, trend: 'neutral', icon: 'book' },
+        { label: 'Lớp phụ trách', value: String(classes.length).padStart(2, '0'), change: `${classes.reduce((sum, item) => sum + item.studentCount, 0)} học viên`, trend: 'neutral', icon: 'book' },
         { label: 'Buổi dạy tuần này', value: String(lessons.length).padStart(2, '0'), change: 'Theo lịch hiện tại', trend: 'neutral', icon: 'calendar' },
         { label: 'Chưa điểm danh', value: String(pendingAttendance).padStart(2, '0'), change: 'Cần xử lý', trend: pendingAttendance ? 'down' : 'neutral', icon: 'check' },
         { label: 'Chưa nhập điểm', value: String(pendingScores).padStart(2, '0'), change: 'Theo bài kiểm tra', trend: pendingScores ? 'down' : 'neutral', icon: 'chart' },
@@ -85,7 +87,7 @@ export class ReportsService {
   }
 
   private async scheduleFor(where: Prisma.LessonWhereInput) {
-    const lessons = await this.prisma.lesson.findMany({ where: { ...where, status: { not: 'CANCELLED' }, lessonDate: { gte: new Date() } }, include: { class: true }, orderBy: [{ lessonDate: 'asc' }, { startTime: 'asc' }], take: 6 });
+    const lessons = await this.prisma.lesson.findMany({ where: { ...where, status: { notIn: ['CANCELLED', 'POSTPONED'] }, endsAt: { gte: new Date() } }, include: { class: true }, orderBy: [{ lessonDate: 'asc' }, { startTime: 'asc' }], take: 6 });
     return lessons.map((lesson) => ({ id: lesson.id.toString(), date: lesson.lessonDate.toISOString(), title: lesson.title, detail: `${lesson.class.code} · ${lesson.class.room ?? 'Chưa xếp phòng'}`, classCode: lesson.class.code, startTime: lesson.startTime.toISOString().slice(11, 16), endTime: lesson.endTime.toISOString().slice(11, 16) }));
   }
 
@@ -101,16 +103,17 @@ export class ReportsService {
     const classWhere = this.reportClassWhere(filter);
     const dateWhere = this.dateWhere(filter);
     const teachers = await this.prisma.teacher.findMany({ where: { user: { status: UserStatus.ACTIVE, ...(filter.teacherName ? { fullName: { contains: filter.teacherName, mode: 'insensitive' } } : {}) } }, include: { user: true, classes: { where: classWhere, include: { enrollments: { where: { status: EnrollmentStatus.ACTIVE } }, lessons: { where: dateWhere ? { lessonDate: dateWhere } : {}, include: { attendance: true } }, tests: { where: dateWhere ? { testDate: dateWhere } : {}, include: { scores: { select: { value: true } } } } } } } });
-    return { data: teachers.map((teacher) => { const attendance = teacher.classes.flatMap((item) => item.lessons.flatMap((lesson) => lesson.attendance)); const attended = attendance.filter((record) => record.status === 'PRESENT' || record.status === 'LATE').length; const scores = teacher.classes.flatMap((item) => item.tests.flatMap((test) => test.scores.map((score) => Number(score.value)))); return { name: teacher.user.fullName, classes: teacher.classes.length, students: teacher.classes.reduce((sum, item) => sum + item.enrollments.length, 0), attendance: attendance.length ? Math.round((attended / attendance.length) * 100) : 0, averageScore: scores.length ? Number((scores.reduce((sum, score) => sum + score, 0) / scores.length).toFixed(1)) : 0 }; }) };
+    return { data: await Promise.all(teachers.map(async (teacher) => { const attendance = teacher.classes.flatMap((item) => item.lessons.flatMap((lesson) => lesson.attendance)); const attended = attendance.filter((record) => record.status === 'PRESENT' || record.status === 'LATE').length; return { name: teacher.user.fullName, classes: teacher.classes.length, students: teacher.classes.reduce((sum, item) => sum + item.studentCount, 0), attendance: attendance.length ? Math.round((attended / attendance.length) * 100) : 0, averageScore: (await this.grades.summarize({ class: { AND: [classWhere, { teacherId: teacher.id }] }, ...(dateWhere ? { testDate: dateWhere } : {}) })).average }; })) };
   }
 
   async getDirectorDashboard() {
+    const gradeWhere: Prisma.TestWhereInput = {};
     const [students, newStudents, teachers, activeClasses, enrollments, attendance, scores, classes, teacherRows] = await this.prisma.$transaction([
       this.prisma.student.count({ where: { user: { status: UserStatus.ACTIVE } } }),
       this.prisma.student.count({ where: { createdAt: { gte: this.daysAgo(30) } } }),
       this.prisma.teacher.count({ where: { user: { status: UserStatus.ACTIVE } } }),
       this.prisma.class.count({ where: { status: ClassStatus.ACTIVE } }),
-      this.prisma.enrollment.count({ where: { status: EnrollmentStatus.ACTIVE } }),
+      this.prisma.enrollment.count({ where: { status: EnrollmentStatus.ACTIVE, class: { status: ClassStatus.ACTIVE } } }),
       this.prisma.attendance.findMany({ select: { status: true } }),
       this.prisma.score.findMany({ select: { value: true } }),
       this.prisma.class.findMany({ where: { status: ClassStatus.ACTIVE }, include: { _count: { select: { enrollments: true } } }, orderBy: { code: 'asc' } }),
@@ -118,7 +121,8 @@ export class ReportsService {
     ]);
     const present = attendance.filter((item) => item.status === 'PRESENT').length;
     const late = attendance.filter((item) => item.status === 'LATE').length;
-    const averageScore = scores.length ? Number((scores.reduce((sum, item) => sum + Number(item.value), 0) / scores.length).toFixed(1)) : 0;
+    const grading = await this.grades.summarize(gradeWhere);
+    const averageScore = grading.average;
     const capacity = await this.prisma.class.aggregate({ where: { status: ClassStatus.ACTIVE }, _sum: { capacity: true } });
     const monthly = await this.monthlyStudentCounts();
     const levels = await Promise.all(['N5', 'N4', 'N3', 'N2', 'N1'].map(async (level) => ({ level, students: await this.prisma.student.count({ where: { currentLevel: level as any, user: { status: UserStatus.ACTIVE } } }) })));
@@ -129,12 +133,12 @@ export class ReportsService {
         { label: 'Tỷ lệ chuyên cần', value: `${attendance.length ? Math.round(((present + late) / attendance.length) * 100) : 0}%`, change: `${present} có mặt`, trend: 'up', icon: 'check' },
         { label: 'Tỷ lệ lấp đầy lớp', value: `${capacity._sum.capacity ? Math.round((enrollments / capacity._sum.capacity) * 100) : 0}%`, change: `${activeClasses} lớp đang hoạt động`, trend: 'neutral', icon: 'chart' },
       ],
-      averageScore,
+      averageScore, grading,
       monthlyStudents: monthly,
       levels,
       attendance: [{ month: 'Hiện tại', rate: attendance.length ? Math.round(((present + late) / attendance.length) * 100) : 0 }],
-      teacherPerformance: teacherRows.map((teacher) => { const teacherScores = teacher.classes.flatMap((item) => item.tests.flatMap((test) => test.scores.map((score) => Number(score.value)))); return { name: teacher.user.fullName, score: teacherScores.length ? Number((teacherScores.reduce((sum, score) => sum + score, 0) / teacherScores.length).toFixed(1)) : 0, classes: teacher._count.classes }; }),
-      classOccupancy: classes.map((item) => ({ code: item.code, occupancy: item.capacity ? Math.round((item._count.enrollments / item.capacity) * 100) : 0, students: item._count.enrollments, capacity: item.capacity })),
+      teacherPerformance: await Promise.all(teacherRows.map(async (teacher) => { const teacherScores = teacher.classes.flatMap((item) => item.tests.flatMap((test) => test.scores.map((score) => Number(score.value)))); return { name: teacher.user.fullName, score: (await this.grades.summarize({ class: { teacherId: teacher.id } })).average, classes: teacher._count.classes }; })),
+      classOccupancy: classes.map((item) => ({ code: item.code, occupancy: item.capacity ? Math.round((item.studentCount / item.capacity) * 100) : 0, students: item.studentCount, capacity: item.capacity })),
       activeClasses,
     };
   }
@@ -142,27 +146,30 @@ export class ReportsService {
   async getReports(filter: ReportFilterDto) {
     const classWhere = this.reportClassWhere(filter);
     const dateWhere = this.dateWhere(filter);
+    const gradeWhere: Prisma.TestWhereInput = { class: classWhere, ...(dateWhere ? { testDate: dateWhere } : {}) };
     const [students, classes, attendance, scores] = await this.prisma.$transaction([
-      this.prisma.student.findMany({ where: { ...(filter.level ? { currentLevel: filter.level } : {}), user: { status: UserStatus.ACTIVE } }, select: { currentLevel: true } }),
+      this.prisma.student.findMany({ where: { ...(filter.level ? { currentLevel: filter.level } : {}), enrollments: { some: { class: classWhere } }, user: { status: UserStatus.ACTIVE } }, select: { currentLevel: true } }),
       this.prisma.class.findMany({ where: classWhere, include: { course: true, teacher: { include: { user: true } }, enrollments: { where: { status: EnrollmentStatus.ACTIVE } }, lessons: { where: dateWhere ? { lessonDate: dateWhere } : {}, include: { attendance: true } } }, orderBy: { code: 'asc' } }),
-      this.prisma.attendance.findMany({ where: dateWhere ? { lesson: { lessonDate: dateWhere } } : {}, select: { status: true } }),
-      this.prisma.score.findMany({ where: dateWhere ? { test: { testDate: dateWhere } } : {}, select: { value: true } }),
+      this.prisma.attendance.findMany({ where: { lesson: { class: classWhere, ...(dateWhere ? { lessonDate: dateWhere } : {}) } }, select: { status: true } }),
+      this.prisma.score.findMany({ where: { test: gradeWhere }, select: { value: true } }),
     ]);
     const levels = ['N5', 'N4', 'N3', 'N2', 'N1'];
     const studentByLevel = levels.map((level) => ({ level, active: students.filter((item) => item.currentLevel === level).length }));
     const classReport = classes.map((item) => { const records = item.lessons.flatMap((lesson) => lesson.attendance); const present = records.filter((record) => record.status === 'PRESENT' || record.status === 'LATE').length; return { code: item.code, course: item.course.name, teacher: item.teacher.user.fullName, students: item.enrollments.length, capacity: item.capacity, attendance: records.length ? Math.round((present / records.length) * 100) : 0 }; });
     const present = attendance.filter((item) => item.status === 'PRESENT' || item.status === 'LATE').length;
-    const averageScore = scores.length ? Number((scores.reduce((sum, item) => sum + Number(item.value), 0) / scores.length).toFixed(1)) : 0;
-    return { summary: [{ label: 'Tổng học viên', value: String(students.length), note: 'Theo bộ lọc hiện tại' }, { label: 'Lớp đang hoạt động', value: String(classes.length), note: 'Theo bộ lọc hiện tại' }, { label: 'Tỷ lệ chuyên cần', value: `${attendance.length ? Math.round((present / attendance.length) * 100) : 0}%`, note: 'Có mặt và đi muộn' }, { label: 'Điểm trung bình', value: averageScore.toFixed(1), note: 'Trên các bài đã chấm' }], studentByLevel, classReport, teacherReport: (await this.getTeacherPerformance(filter)).data };
+    const grading = await this.grades.summarize(gradeWhere);
+    const averageScore = grading.average;
+    return { summary: [{ label: 'Tổng học viên', value: String(students.length), note: 'Theo bộ lọc hiện tại' }, { label: 'Lớp đang hoạt động', value: String(classes.length), note: 'Theo bộ lọc hiện tại' }, { label: 'Tỷ lệ chuyên cần', value: `${attendance.length ? Math.round((present / attendance.length) * 100) : 0}%`, note: 'Có mặt và đi muộn' }, { label: 'Điểm trung bình', value: averageScore.toFixed(1), note: grading.provisional ? 'Tạm tính theo trọng số; chưa đủ bài' : 'Tổng kết theo trọng số' }], studentByLevel, classReport, teacherReport: (await this.getTeacherPerformance(filter)).data };
   }
 
   private reportClassWhere(filter: ReportFilterDto): Prisma.ClassWhereInput {
-    return { ...(filter.classId ? { id: BigInt(filter.classId) } : {}), ...(filter.teacherId ? { teacherId: BigInt(filter.teacherId) } : {}), ...(filter.classCode ? { code: filter.classCode } : {}) };
+    return { ...(filter.level ? { course: { level: filter.level } } : {}), ...(filter.teacherName ? { teacher: { user: { fullName: { contains: filter.teacherName, mode: 'insensitive' } } } } : {}), ...(filter.classId ? { id: BigInt(filter.classId) } : {}), ...(filter.teacherId ? { teacherId: BigInt(filter.teacherId) } : {}), ...(filter.classCode ? { code: filter.classCode } : {}) };
   }
 
   private dateWhere(filter: ReportFilterDto): Prisma.DateTimeFilter | undefined {
     if (filter.fromDate || filter.toDate) return { ...(filter.fromDate ? { gte: new Date(`${filter.fromDate.slice(0, 10)}T00:00:00.000Z`) } : {}), ...(filter.toDate ? { lte: new Date(`${filter.toDate.slice(0, 10)}T23:59:59.999Z`) } : {}) };
-    if (!filter.period || filter.period === 'year') return undefined;
+    if (!filter.period) return undefined;
+    if (filter.period === 'year') return { gte: new Date(Date.UTC(new Date().getUTCFullYear(), 0, 1)) };
     const now = new Date();
     const start = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
     if (filter.period === 'last-month') { const previous = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth() - 1, 1)); return { gte: previous, lt: start }; }
@@ -176,6 +183,7 @@ export class ReportsService {
     const result: { month: string; students: number; newStudents: number }[] = [];
     for (let index = 5; index >= 0; index -= 1) {
       const start = new Date();
+      start.setUTCHours(0, 0, 0, 0);
       start.setUTCDate(1);
       start.setUTCMonth(start.getUTCMonth() - index);
       const end = new Date(start);

@@ -8,7 +8,9 @@ export interface StudentProfile {
   dateOfBirth: string;
   email: string;
   phone: string;
-  currentLevel: JLPTLevel;
-  targetLevel: JLPTLevel;
+  goal?: string | null;
+  emergencyContact?: string | null;
+  currentLevel: JLPTLevel | null;
+  targetLevel: JLPTLevel | null;
   status: StudentStatus;
 }

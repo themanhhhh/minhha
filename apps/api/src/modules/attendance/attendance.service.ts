@@ -22,6 +22,7 @@ export class AttendanceService {
 
   async update(lessonId: string, dto: UpdateAttendanceDto, user: AuthPayload) {
     const lesson = await this.access.assertLesson(lessonId, user, true);
+    if (lesson.startsAt > new Date() || lesson.status === 'CANCELLED' || lesson.status === 'POSTPONED') throw new BadRequestException('Attendance is only available for lessons that have started and are not cancelled or postponed');
     const enrollments = await this.prisma.enrollment.findMany({ where: { classId: lesson.classId, status: EnrollmentStatus.ACTIVE }, select: { studentId: true } });
     const allowed = new Set(enrollments.map((item) => item.studentId.toString()));
     const uniqueStudents = new Set(dto.entries.map((entry) => entry.studentId));

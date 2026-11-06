@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { resolve } from 'node:path';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { HealthController } from './modules/health/health.controller';
@@ -17,13 +18,14 @@ import { StorageModule } from './storage/storage.module';
 import { TeacherContentModule } from './modules/teacher-content/teacher-content.module';
 import { UsersModule } from './modules/users/users.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
+import { AcademicDataModule } from './modules/academic-data/academic-data.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
-      envFilePath: ['.env', '../../.env'],
+      envFilePath: [resolve(__dirname, '../.env'), resolve(__dirname, '../../../.env')],
       validate: (config: Record<string, string | undefined>) => {
         const required = ['DATABASE_URL', 'JWT_ACCESS_SECRET', 'JWT_REFRESH_SECRET'];
         const missing = required.filter((key) => !config[key]);
@@ -38,6 +40,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     UsersModule,
     NotificationsModule,
     DatabaseModule,
+    AcademicDataModule,
     AuthModule,
     StudentsModule,
     TeachersModule,

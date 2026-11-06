@@ -11,5 +11,5 @@ export interface ScoreEntry extends Omit<Score, 'value'> {
   value: number | null;
 }
 
-export interface TeacherLessonOption { id: number; classId: number; label: string; date: string; }
-export interface TeacherTestOption { id: number; classId: number; label: string; date: string; }
+export interface TeacherLessonOption { id: number; classId: number; label: string; date: string; maxScore?: number; }
+export interface TeacherTestOption { id: number; classId: number; label: string; date: string; maxScore?: number; }

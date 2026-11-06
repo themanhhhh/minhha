@@ -1,0 +1,152 @@
+{
+  "checkedAt": "2026-11-06T10:42:27.371Z",
+  "readOnly": true,
+  "tableCount": 26,
+  "columnCount": 207,
+  "foreignKeys": 39,
+  "weights": [
+    {
+      "code": "QUIZ",
+      "weight": 10
+    },
+    {
+      "code": "MIDTERM",
+      "weight": 40
+    },
+    {
+      "code": "FINAL",
+      "weight": 50
+    },
+    {
+      "code": "JLPT",
+      "weight": 0
+    }
+  ],
+  "preserved": {
+    "NguoiDung": 46,
+    "RefreshToken": 17,
+    "PasswordResetToken": 0,
+    "HocVien": 36,
+    "GiaoVien": 8,
+    "KhoaHoc": 6,
+    "LopHoc": 13,
+    "DangKyHoc": 183,
+    "ChuyenLop": 0,
+    "BaoLuu": 0,
+    "BuoiHoc": 156,
+    "DiemDanh": 1351,
+    "BaiKiemTra": 39,
+    "DiemSo": 338,
+    "BaiTap": 27,
+    "TepBaiTap": 0,
+    "TaiLieuLop": 0,
+    "NopBai": 0,
+    "TepNopBai": 0,
+    "AuditLog": 6,
+    "ThongBao": 19
+  },
+  "checks": [
+    {
+      "role": "ACADEMIC_STAFF",
+      "route": "/auth/me",
+      "status": 200,
+      "ms": 2701
+    },
+    {
+      "role": "ACADEMIC_STAFF",
+      "route": "/dashboard/me",
+      "status": 200,
+      "ms": 5706
+    },
+    {
+      "role": "ACADEMIC_STAFF",
+      "route": "/lookups",
+      "status": 200,
+      "ms": 2912
+    },
+    {
+      "role": "ACADEMIC_STAFF",
+      "route": "/students?pageSize=100",
+      "status": 200,
+      "ms": 7285
+    },
+    {
+      "role": "ACADEMIC_STAFF",
+      "route": "/academic/operations",
+      "status": 200,
+      "ms": 1178
+    },
+    {
+      "role": "DIRECTOR",
+      "route": "/auth/me",
+      "status": 200,
+      "ms": 2071
+    },
+    {
+      "role": "DIRECTOR",
+      "route": "/dashboard/me",
+      "status": 200,
+      "ms": 20365
+    },
+    {
+      "role": "DIRECTOR",
+      "route": "/reports/classes?period=year",
+      "status": 200,
+      "ms": 17181
+    },
+    {
+      "role": "TEACHER",
+      "route": "/auth/me",
+      "status": 200,
+      "ms": 1138
+    },
+    {
+      "role": "TEACHER",
+      "route": "/dashboard/me",
+      "status": 200,
+      "ms": 4920
+    },
+    {
+      "role": "TEACHER",
+      "route": "/teacher/classes",
+      "status": 200,
+      "ms": 2000
+    },
+    {
+      "role": "STUDENT",
+      "route": "/auth/me",
+      "status": 200,
+      "ms": 1136
+    },
+    {
+      "role": "STUDENT",
+      "route": "/dashboard/me",
+      "status": 200,
+      "ms": 7171
+    },
+    {
+      "role": "STUDENT",
+      "route": "/me/profile",
+      "status": 200,
+      "ms": 2058
+    },
+    {
+      "role": "STUDENT",
+      "route": "/me/classes",
+      "status": 200,
+      "ms": 8993
+    },
+    {
+      "role": "STUDENT",
+      "route": "/me/scores",
+      "status": 200,
+      "ms": 4824
+    },
+    {
+      "role": "STUDENT",
+      "route": "/me/progress",
+      "status": 200,
+      "ms": 6215
+    }
+  ]
+}

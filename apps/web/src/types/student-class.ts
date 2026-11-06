@@ -12,6 +12,8 @@ export interface StudentClass {
   level: JLPTLevel;
   teacherName: string;
   teacherInitials: string;
+  session?: string | null;
+  meetingUrl?: string | null;
   schedule: string;
   room: string;
   completedLessons: number;

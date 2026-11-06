@@ -30,6 +30,10 @@ export class TeachingAccessService {
   async assertLesson(lessonId: string, user: AuthPayload, write: boolean) {
     const lesson = await this.prisma.lesson.findUnique({ where: { id: BigInt(lessonId) } });
     if (!lesson) notFound('Lesson', lessonId);
+    if (user.role === UserRole.TEACHER && lesson.substituteTeacherId) {
+      const teacher = await this.prisma.teacher.findUnique({ where: { userId: BigInt(user.sub) } });
+      if (teacher?.id === lesson.substituteTeacherId) return lesson;
+    }
     await this.assertClass(lesson.classId.toString(), user, write);
     return lesson;
   }

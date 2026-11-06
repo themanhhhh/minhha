@@ -1,0 +1,2716 @@
+{
+  "capturedAt": "2026-11-06T10:40:49.463Z",
+  "columns": [
+    {
+      "table_name": "AuditLog",
+      "column_name": "id",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": "nextval('\"AuditLog_id_seq\"'::regclass)",
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "AuditLog",
+      "column_name": "actor_id",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "AuditLog",
+      "column_name": "action",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 100,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "AuditLog",
+      "column_name": "entity",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 100,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "AuditLog",
+      "column_name": "entity_id",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 100,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "AuditLog",
+      "column_name": "old_value",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "AuditLog",
+      "column_name": "new_value",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "AuditLog",
+      "column_name": "ip_address",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 64,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "AuditLog",
+      "column_name": "user_agent",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 500,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "AuditLog",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "CURRENT_TIMESTAMP",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BaiKiemTra",
+      "column_name": "ma_bai_kiem_tra",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": "nextval('\"BaiKiemTra_id_seq\"'::regclass)",
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "BaiKiemTra",
+      "column_name": "ma_lop_hoc",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "BaiKiemTra",
+      "column_name": "ten_bai_kiem_tra",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 100,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BaiKiemTra",
+      "column_name": "type",
+      "data_type": "USER-DEFINED",
+      "udt_name": "TestType",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BaiKiemTra",
+      "column_name": "max_score",
+      "data_type": "numeric",
+      "udt_name": "numeric",
+      "is_nullable": "NO",
+      "column_default": "10",
+      "character_maximum_length": null,
+      "numeric_precision": 5,
+      "numeric_scale": 2
+    },
+    {
+      "table_name": "BaiKiemTra",
+      "column_name": "ngay_kiem_tra",
+      "data_type": "date",
+      "udt_name": "date",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BaiKiemTra",
+      "column_name": "ma_loai_bai_kiem_tra",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "BaiTap",
+      "column_name": "id",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": "nextval('\"BaiTap_id_seq\"'::regclass)",
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "BaiTap",
+      "column_name": "class_id",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "BaiTap",
+      "column_name": "title",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 200,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BaiTap",
+      "column_name": "description",
+      "data_type": "text",
+      "udt_name": "text",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BaiTap",
+      "column_name": "due_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BaiTap",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "CURRENT_TIMESTAMP",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BaiTap",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BaoLuu",
+      "column_name": "ma_bao_luu",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": "nextval('\"BaoLuu_id_seq\"'::regclass)",
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "BaoLuu",
+      "column_name": "ma_hoc_vien",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "BaoLuu",
+      "column_name": "ma_lop_hoc",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "BaoLuu",
+      "column_name": "ly_do_bao_luu",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 255,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BaoLuu",
+      "column_name": "status",
+      "data_type": "USER-DEFINED",
+      "udt_name": "ReservationStatus",
+      "is_nullable": "NO",
+      "column_default": "'PENDING'::\"ReservationStatus\"",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BaoLuu",
+      "column_name": "ngay_bao_luu",
+      "data_type": "date",
+      "udt_name": "date",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BaoLuu",
+      "column_name": "end_date",
+      "data_type": "date",
+      "udt_name": "date",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BaoLuu",
+      "column_name": "thoi_han_bao_luu",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "BaoLuu",
+      "column_name": "trang_thai_bao_luu",
+      "data_type": "boolean",
+      "udt_name": "bool",
+      "is_nullable": "NO",
+      "column_default": "false",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BuoiHoc",
+      "column_name": "ma_buoi_hoc",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": "nextval('\"BuoiHoc_id_seq\"'::regclass)",
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "BuoiHoc",
+      "column_name": "ma_lop_hoc",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "BuoiHoc",
+      "column_name": "ten_buoi_hoc",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 100,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BuoiHoc",
+      "column_name": "lesson_date",
+      "data_type": "date",
+      "udt_name": "date",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BuoiHoc",
+      "column_name": "start_time",
+      "data_type": "time without time zone",
+      "udt_name": "time",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BuoiHoc",
+      "column_name": "end_time",
+      "data_type": "time without time zone",
+      "udt_name": "time",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BuoiHoc",
+      "column_name": "noi_dung_buoi_hoc",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 255,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BuoiHoc",
+      "column_name": "link_record",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 255,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BuoiHoc",
+      "column_name": "status",
+      "data_type": "USER-DEFINED",
+      "udt_name": "LessonStatus",
+      "is_nullable": "NO",
+      "column_default": "'UPCOMING'::\"LessonStatus\"",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BuoiHoc",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "CURRENT_TIMESTAMP",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BuoiHoc",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BuoiHoc",
+      "column_name": "ma_giao_vien_day_thay",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "BuoiHoc",
+      "column_name": "thoi_gian_bat_dau",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "BuoiHoc",
+      "column_name": "thoi_gian_ket_thuc",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "ChuyenLop",
+      "column_name": "ma_chuyen_lop",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": "nextval('\"LichSuChuyenLop_id_seq\"'::regclass)",
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "ChuyenLop",
+      "column_name": "ma_hoc_vien",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "ChuyenLop",
+      "column_name": "ma_lop_hoc_cu",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "ChuyenLop",
+      "column_name": "ma_lop_hoc_moi",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "ChuyenLop",
+      "column_name": "ly_do_chuyen_lop",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 255,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "ChuyenLop",
+      "column_name": "status",
+      "data_type": "USER-DEFINED",
+      "udt_name": "TransferStatus",
+      "is_nullable": "NO",
+      "column_default": "'REQUESTED'::\"TransferStatus\"",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "ChuyenLop",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "CURRENT_TIMESTAMP",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "ChuyenLop",
+      "column_name": "ngay_chuyen_lop",
+      "data_type": "date",
+      "udt_name": "date",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "DangKyHoc",
+      "column_name": "ma_dang_ky",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": "nextval('\"DangKyLop_id_seq\"'::regclass)",
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "DangKyHoc",
+      "column_name": "ma_hoc_vien",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "DangKyHoc",
+      "column_name": "ma_lop_hoc",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "DangKyHoc",
+      "column_name": "status",
+      "data_type": "USER-DEFINED",
+      "udt_name": "EnrollmentStatus",
+      "is_nullable": "NO",
+      "column_default": "'ACTIVE'::\"EnrollmentStatus\"",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "DangKyHoc",
+      "column_name": "enrolled_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "CURRENT_TIMESTAMP",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "DangKyHoc",
+      "column_name": "left_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "DangKyHoc",
+      "column_name": "ngay_tham_gia",
+      "data_type": "date",
+      "udt_name": "date",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "DiemDanh",
+      "column_name": "ma_diem_danh",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": "nextval('\"DiemDanh_id_seq\"'::regclass)",
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "DiemDanh",
+      "column_name": "ma_buoi_hoc",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "DiemDanh",
+      "column_name": "ma_hoc_vien",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "DiemDanh",
+      "column_name": "status",
+      "data_type": "USER-DEFINED",
+      "udt_name": "AttendanceStatus",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "DiemDanh",
+      "column_name": "ghi_chu",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 255,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "DiemDanh",
+      "column_name": "ma_trang_thai_diem_danh",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "DiemSo",
+      "column_name": "ma_diem_so",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": "nextval('\"DiemSo_id_seq\"'::regclass)",
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "DiemSo",
+      "column_name": "ma_bai_kiem_tra",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "DiemSo",
+      "column_name": "ma_hoc_vien",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "DiemSo",
+      "column_name": "so_diem",
+      "data_type": "double precision",
+      "udt_name": "float8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 53,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "DiemSo",
+      "column_name": "note",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 500,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "GiaoVien",
+      "column_name": "ma_giao_vien",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": "nextval('\"GiaoVien_id_seq\"'::regclass)",
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "GiaoVien",
+      "column_name": "ma_nguoi_dung",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "GiaoVien",
+      "column_name": "teacher_code",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 30,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "GiaoVien",
+      "column_name": "phone",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 30,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "GiaoVien",
+      "column_name": "jlpt_level",
+      "data_type": "USER-DEFINED",
+      "udt_name": "JlptLevel",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "GiaoVien",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "CURRENT_TIMESTAMP",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "GiaoVien",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "GiaoVien",
+      "column_name": "ma_trinh_do_jlpt",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "HocVien",
+      "column_name": "ma_hoc_vien",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": "nextval('\"HocVien_id_seq\"'::regclass)",
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "HocVien",
+      "column_name": "ma_nguoi_dung",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "HocVien",
+      "column_name": "student_code",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 30,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "HocVien",
+      "column_name": "gender",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 20,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "HocVien",
+      "column_name": "ngay_sinh",
+      "data_type": "date",
+      "udt_name": "date",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "HocVien",
+      "column_name": "current_level",
+      "data_type": "USER-DEFINED",
+      "udt_name": "JlptLevel",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "HocVien",
+      "column_name": "target_level",
+      "data_type": "USER-DEFINED",
+      "udt_name": "JlptLevel",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "HocVien",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "CURRENT_TIMESTAMP",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "HocVien",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "HocVien",
+      "column_name": "lien_he_khan_cap",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 255,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "HocVien",
+      "column_name": "ma_trinh_do_hien_tai",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "HocVien",
+      "column_name": "ma_trinh_do_muc_tieu",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "HocVien",
+      "column_name": "muc_tieu",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 255,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "KhoaHoc",
+      "column_name": "ma_khoa_hoc",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": "nextval('\"KhoaHoc_id_seq\"'::regclass)",
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "KhoaHoc",
+      "column_name": "code",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 30,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "KhoaHoc",
+      "column_name": "ten_khoa_hoc",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 100,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "KhoaHoc",
+      "column_name": "level",
+      "data_type": "USER-DEFINED",
+      "udt_name": "JlptLevel",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "KhoaHoc",
+      "column_name": "so_buoi_hoc",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "KhoaHoc",
+      "column_name": "hoc_phi",
+      "data_type": "numeric",
+      "udt_name": "numeric",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 15,
+      "numeric_scale": 2
+    },
+    {
+      "table_name": "KhoaHoc",
+      "column_name": "status",
+      "data_type": "USER-DEFINED",
+      "udt_name": "CourseStatus",
+      "is_nullable": "NO",
+      "column_default": "'ACTIVE'::\"CourseStatus\"",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "KhoaHoc",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "CURRENT_TIMESTAMP",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "KhoaHoc",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "KhoaHoc",
+      "column_name": "ma_trinh_do_jlpt",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "KhoaHoc",
+      "column_name": "mo_ta",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 255,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "LoaiBaiKiemTra",
+      "column_name": "ma_loai_bai_kiem_tra",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "LoaiBaiKiemTra",
+      "column_name": "code",
+      "data_type": "USER-DEFINED",
+      "udt_name": "TestType",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "LoaiBaiKiemTra",
+      "column_name": "ten_loai_bai",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 50,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "LoaiBaiKiemTra",
+      "column_name": "trong_so",
+      "data_type": "double precision",
+      "udt_name": "float8",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 53,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "LopHoc",
+      "column_name": "ma_lop_hoc",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": "nextval('\"LopHoc_id_seq\"'::regclass)",
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "LopHoc",
+      "column_name": "code",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 30,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "LopHoc",
+      "column_name": "ten_lop_hoc",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 100,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "LopHoc",
+      "column_name": "course_id",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "LopHoc",
+      "column_name": "ma_giao_vien",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "LopHoc",
+      "column_name": "ngay_khai_giang",
+      "data_type": "date",
+      "udt_name": "date",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "LopHoc",
+      "column_name": "ngay_ket_thuc",
+      "data_type": "date",
+      "udt_name": "date",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "LopHoc",
+      "column_name": "lich_hoc",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 100,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "LopHoc",
+      "column_name": "room",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 100,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "LopHoc",
+      "column_name": "si_so_toi_da",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": "20",
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "LopHoc",
+      "column_name": "status",
+      "data_type": "USER-DEFINED",
+      "udt_name": "ClassStatus",
+      "is_nullable": "NO",
+      "column_default": "'UPCOMING'::\"ClassStatus\"",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "LopHoc",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "CURRENT_TIMESTAMP",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "LopHoc",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "LopHoc",
+      "column_name": "ca_hoc",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 50,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "LopHoc",
+      "column_name": "link_vao_hoc",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 255,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "LopHoc",
+      "column_name": "si_so_hien_tai",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": "0",
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "NguoiDung",
+      "column_name": "ma_nguoi_dung",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": "nextval('\"NguoiDung_id_seq\"'::regclass)",
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "NguoiDung",
+      "column_name": "email",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 255,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "NguoiDung",
+      "column_name": "mat_khau",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 255,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "NguoiDung",
+      "column_name": "ho_ten",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 100,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "NguoiDung",
+      "column_name": "role",
+      "data_type": "USER-DEFINED",
+      "udt_name": "UserRole",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "NguoiDung",
+      "column_name": "status",
+      "data_type": "USER-DEFINED",
+      "udt_name": "UserStatus",
+      "is_nullable": "NO",
+      "column_default": "'ACTIVE'::\"UserStatus\"",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "NguoiDung",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "CURRENT_TIMESTAMP",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "NguoiDung",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "NguoiDung",
+      "column_name": "last_login_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "NguoiDung",
+      "column_name": "ma_trang_thai",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "NguoiDung",
+      "column_name": "ma_vai_tro_nguoi_dung",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "NguoiDung",
+      "column_name": "sdt",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 12,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "NopBai",
+      "column_name": "id",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": "nextval('\"NopBai_id_seq\"'::regclass)",
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "NopBai",
+      "column_name": "assignment_id",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "NopBai",
+      "column_name": "student_id",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "NopBai",
+      "column_name": "note",
+      "data_type": "text",
+      "udt_name": "text",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "NopBai",
+      "column_name": "status",
+      "data_type": "USER-DEFINED",
+      "udt_name": "SubmissionStatus",
+      "is_nullable": "NO",
+      "column_default": "'SUBMITTED'::\"SubmissionStatus\"",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "NopBai",
+      "column_name": "submitted_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "CURRENT_TIMESTAMP",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "PasswordResetToken",
+      "column_name": "id",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": "nextval('\"PasswordResetToken_id_seq\"'::regclass)",
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "PasswordResetToken",
+      "column_name": "user_id",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "PasswordResetToken",
+      "column_name": "token_id",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 36,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "PasswordResetToken",
+      "column_name": "token_hash",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 255,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "PasswordResetToken",
+      "column_name": "expires_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "PasswordResetToken",
+      "column_name": "used_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "PasswordResetToken",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "CURRENT_TIMESTAMP",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "RefreshToken",
+      "column_name": "id",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": "nextval('\"RefreshToken_id_seq\"'::regclass)",
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "RefreshToken",
+      "column_name": "user_id",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "RefreshToken",
+      "column_name": "token_id",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 36,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "RefreshToken",
+      "column_name": "token_hash",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 255,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "RefreshToken",
+      "column_name": "expires_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "RefreshToken",
+      "column_name": "revoked_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "RefreshToken",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "CURRENT_TIMESTAMP",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "TaiLieuLop",
+      "column_name": "id",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": "nextval('\"TaiLieuLop_id_seq\"'::regclass)",
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "TaiLieuLop",
+      "column_name": "class_id",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "TaiLieuLop",
+      "column_name": "lesson_id",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "TaiLieuLop",
+      "column_name": "created_by",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "TaiLieuLop",
+      "column_name": "title",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 200,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "TaiLieuLop",
+      "column_name": "description",
+      "data_type": "text",
+      "udt_name": "text",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "TaiLieuLop",
+      "column_name": "storage_path",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 500,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "TaiLieuLop",
+      "column_name": "file_name",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 255,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "TaiLieuLop",
+      "column_name": "mime_type",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 120,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "TaiLieuLop",
+      "column_name": "size_bytes",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "TaiLieuLop",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "CURRENT_TIMESTAMP",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "TepBaiTap",
+      "column_name": "id",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": "nextval('\"TepBaiTap_id_seq\"'::regclass)",
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "TepBaiTap",
+      "column_name": "assignment_id",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "TepBaiTap",
+      "column_name": "storage_path",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 500,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "TepBaiTap",
+      "column_name": "file_name",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 255,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "TepBaiTap",
+      "column_name": "mime_type",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 120,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "TepBaiTap",
+      "column_name": "size_bytes",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "TepBaiTap",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "CURRENT_TIMESTAMP",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "TepNopBai",
+      "column_name": "id",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": "nextval('\"TepNopBai_id_seq\"'::regclass)",
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "TepNopBai",
+      "column_name": "submission_id",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "TepNopBai",
+      "column_name": "storage_path",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 500,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "TepNopBai",
+      "column_name": "file_name",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 255,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "TepNopBai",
+      "column_name": "mime_type",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 120,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "TepNopBai",
+      "column_name": "size_bytes",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "TepNopBai",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "CURRENT_TIMESTAMP",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "ThongBao",
+      "column_name": "id",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": "nextval('\"ThongBao_id_seq\"'::regclass)",
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "ThongBao",
+      "column_name": "recipient_id",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "ThongBao",
+      "column_name": "created_by_id",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 64,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "ThongBao",
+      "column_name": "type",
+      "data_type": "USER-DEFINED",
+      "udt_name": "NotificationType",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "ThongBao",
+      "column_name": "title",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 200,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "ThongBao",
+      "column_name": "body",
+      "data_type": "text",
+      "udt_name": "text",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "ThongBao",
+      "column_name": "action_url",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 500,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "ThongBao",
+      "column_name": "entity",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 100,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "ThongBao",
+      "column_name": "entity_id",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 100,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "ThongBao",
+      "column_name": "metadata",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "ThongBao",
+      "column_name": "dedupe_key",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": 255,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "ThongBao",
+      "column_name": "read_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "YES",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "ThongBao",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "is_nullable": "NO",
+      "column_default": "CURRENT_TIMESTAMP",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "TrangThaiDiemDanh",
+      "column_name": "ma_trang_thai_diem_danh",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "TrangThaiDiemDanh",
+      "column_name": "code",
+      "data_type": "USER-DEFINED",
+      "udt_name": "AttendanceStatus",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "TrangThaiDiemDanh",
+      "column_name": "ten_trang_thai",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 50,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "TrangThaiNguoiDung",
+      "column_name": "ma_trang_thai",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "TrangThaiNguoiDung",
+      "column_name": "code",
+      "data_type": "USER-DEFINED",
+      "udt_name": "UserStatus",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "TrangThaiNguoiDung",
+      "column_name": "ten_trang_thai",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 50,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "TrinhDoJLPT",
+      "column_name": "ma_trinh_do_jlpt",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "TrinhDoJLPT",
+      "column_name": "code",
+      "data_type": "USER-DEFINED",
+      "udt_name": "JlptLevel",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "TrinhDoJLPT",
+      "column_name": "ten_trinh_do",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 10,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "VaiTroNguoiDung",
+      "column_name": "ma_vai_tro",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0
+    },
+    {
+      "table_name": "VaiTroNguoiDung",
+      "column_name": "code",
+      "data_type": "USER-DEFINED",
+      "udt_name": "UserRole",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null
+    },
+    {
+      "table_name": "VaiTroNguoiDung",
+      "column_name": "ten_vai_tro",
+      "data_type": "character varying",
+      "udt_name": "varchar",
+      "is_nullable": "NO",
+      "column_default": null,
+      "character_maximum_length": 50,
+      "numeric_precision": null,
+      "numeric_scale": null
+    }
+  ],
+  "constraints": [
+    {
+      "table_name": "AuditLog",
+      "constraint_name": "AuditLog_actor_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (actor_id) REFERENCES \"NguoiDung\"(ma_nguoi_dung) ON UPDATE CASCADE ON DELETE SET NULL"
+    },
+    {
+      "table_name": "AuditLog",
+      "constraint_name": "AuditLog_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "BaiKiemTra",
+      "constraint_name": "BaiKiemTra_class_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_lop_hoc) REFERENCES \"LopHoc\"(ma_lop_hoc) ON UPDATE CASCADE ON DELETE CASCADE"
+    },
+    {
+      "table_name": "BaiKiemTra",
+      "constraint_name": "BaiKiemTra_ma_loai_bai_kiem_tra_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_loai_bai_kiem_tra) REFERENCES \"LoaiBaiKiemTra\"(ma_loai_bai_kiem_tra) ON UPDATE CASCADE ON DELETE RESTRICT"
+    },
+    {
+      "table_name": "BaiKiemTra",
+      "constraint_name": "BaiKiemTra_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (ma_bai_kiem_tra)"
+    },
+    {
+      "table_name": "BaiTap",
+      "constraint_name": "BaiTap_class_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (class_id) REFERENCES \"LopHoc\"(ma_lop_hoc) ON UPDATE CASCADE ON DELETE CASCADE"
+    },
+    {
+      "table_name": "BaiTap",
+      "constraint_name": "BaiTap_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "BaoLuu",
+      "constraint_name": "BaoLuu_class_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_lop_hoc) REFERENCES \"LopHoc\"(ma_lop_hoc) ON UPDATE CASCADE ON DELETE RESTRICT"
+    },
+    {
+      "table_name": "BaoLuu",
+      "constraint_name": "BaoLuu_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (ma_bao_luu)"
+    },
+    {
+      "table_name": "BaoLuu",
+      "constraint_name": "BaoLuu_student_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_hoc_vien) REFERENCES \"HocVien\"(ma_hoc_vien) ON UPDATE CASCADE ON DELETE RESTRICT"
+    },
+    {
+      "table_name": "BaoLuu",
+      "constraint_name": "riki_reservation_duration",
+      "type": "c",
+      "definition": "CHECK (((thoi_han_bao_luu IS NULL) OR (thoi_han_bao_luu > 0)))"
+    },
+    {
+      "table_name": "BuoiHoc",
+      "constraint_name": "BuoiHoc_class_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_lop_hoc) REFERENCES \"LopHoc\"(ma_lop_hoc) ON UPDATE CASCADE ON DELETE CASCADE"
+    },
+    {
+      "table_name": "BuoiHoc",
+      "constraint_name": "BuoiHoc_ma_giao_vien_day_thay_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_giao_vien_day_thay) REFERENCES \"GiaoVien\"(ma_giao_vien) ON UPDATE CASCADE ON DELETE SET NULL"
+    },
+    {
+      "table_name": "BuoiHoc",
+      "constraint_name": "BuoiHoc_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (ma_buoi_hoc)"
+    },
+    {
+      "table_name": "ChuyenLop",
+      "constraint_name": "LichSuChuyenLop_from_class_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_lop_hoc_cu) REFERENCES \"LopHoc\"(ma_lop_hoc) ON UPDATE CASCADE ON DELETE SET NULL"
+    },
+    {
+      "table_name": "ChuyenLop",
+      "constraint_name": "LichSuChuyenLop_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (ma_chuyen_lop)"
+    },
+    {
+      "table_name": "ChuyenLop",
+      "constraint_name": "LichSuChuyenLop_student_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_hoc_vien) REFERENCES \"HocVien\"(ma_hoc_vien) ON UPDATE CASCADE ON DELETE RESTRICT"
+    },
+    {
+      "table_name": "ChuyenLop",
+      "constraint_name": "LichSuChuyenLop_to_class_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_lop_hoc_moi) REFERENCES \"LopHoc\"(ma_lop_hoc) ON UPDATE CASCADE ON DELETE RESTRICT"
+    },
+    {
+      "table_name": "DangKyHoc",
+      "constraint_name": "DangKyLop_class_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_lop_hoc) REFERENCES \"LopHoc\"(ma_lop_hoc) ON UPDATE CASCADE ON DELETE RESTRICT"
+    },
+    {
+      "table_name": "DangKyHoc",
+      "constraint_name": "DangKyLop_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (ma_dang_ky)"
+    },
+    {
+      "table_name": "DangKyHoc",
+      "constraint_name": "DangKyLop_student_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_hoc_vien) REFERENCES \"HocVien\"(ma_hoc_vien) ON UPDATE CASCADE ON DELETE RESTRICT"
+    },
+    {
+      "table_name": "DiemDanh",
+      "constraint_name": "DiemDanh_lesson_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_buoi_hoc) REFERENCES \"BuoiHoc\"(ma_buoi_hoc) ON UPDATE CASCADE ON DELETE CASCADE"
+    },
+    {
+      "table_name": "DiemDanh",
+      "constraint_name": "DiemDanh_ma_trang_thai_diem_danh_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_trang_thai_diem_danh) REFERENCES \"TrangThaiDiemDanh\"(ma_trang_thai_diem_danh) ON UPDATE CASCADE ON DELETE RESTRICT"
+    },
+    {
+      "table_name": "DiemDanh",
+      "constraint_name": "DiemDanh_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (ma_diem_danh)"
+    },
+    {
+      "table_name": "DiemDanh",
+      "constraint_name": "DiemDanh_student_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_hoc_vien) REFERENCES \"HocVien\"(ma_hoc_vien) ON UPDATE CASCADE ON DELETE RESTRICT"
+    },
+    {
+      "table_name": "DiemSo",
+      "constraint_name": "DiemSo_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (ma_diem_so)"
+    },
+    {
+      "table_name": "DiemSo",
+      "constraint_name": "DiemSo_student_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_hoc_vien) REFERENCES \"HocVien\"(ma_hoc_vien) ON UPDATE CASCADE ON DELETE RESTRICT"
+    },
+    {
+      "table_name": "DiemSo",
+      "constraint_name": "DiemSo_test_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_bai_kiem_tra) REFERENCES \"BaiKiemTra\"(ma_bai_kiem_tra) ON UPDATE CASCADE ON DELETE CASCADE"
+    },
+    {
+      "table_name": "DiemSo",
+      "constraint_name": "riki_score_range",
+      "type": "c",
+      "definition": "CHECK (((so_diem >= (0)::double precision) AND (so_diem <= (999.99)::double precision) AND (so_diem <> 'NaN'::double precision)))"
+    },
+    {
+      "table_name": "GiaoVien",
+      "constraint_name": "GiaoVien_ma_trinh_do_jlpt_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_trinh_do_jlpt) REFERENCES \"TrinhDoJLPT\"(ma_trinh_do_jlpt) ON UPDATE CASCADE ON DELETE SET NULL"
+    },
+    {
+      "table_name": "GiaoVien",
+      "constraint_name": "GiaoVien_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (ma_giao_vien)"
+    },
+    {
+      "table_name": "GiaoVien",
+      "constraint_name": "GiaoVien_user_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_nguoi_dung) REFERENCES \"NguoiDung\"(ma_nguoi_dung) ON UPDATE CASCADE ON DELETE CASCADE"
+    },
+    {
+      "table_name": "HocVien",
+      "constraint_name": "HocVien_ma_trinh_do_hien_tai_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_trinh_do_hien_tai) REFERENCES \"TrinhDoJLPT\"(ma_trinh_do_jlpt) ON UPDATE CASCADE ON DELETE SET NULL"
+    },
+    {
+      "table_name": "HocVien",
+      "constraint_name": "HocVien_ma_trinh_do_muc_tieu_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_trinh_do_muc_tieu) REFERENCES \"TrinhDoJLPT\"(ma_trinh_do_jlpt) ON UPDATE CASCADE ON DELETE SET NULL"
+    },
+    {
+      "table_name": "HocVien",
+      "constraint_name": "HocVien_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (ma_hoc_vien)"
+    },
+    {
+      "table_name": "HocVien",
+      "constraint_name": "HocVien_user_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_nguoi_dung) REFERENCES \"NguoiDung\"(ma_nguoi_dung) ON UPDATE CASCADE ON DELETE CASCADE"
+    },
+    {
+      "table_name": "KhoaHoc",
+      "constraint_name": "KhoaHoc_ma_trinh_do_jlpt_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_trinh_do_jlpt) REFERENCES \"TrinhDoJLPT\"(ma_trinh_do_jlpt) ON UPDATE CASCADE ON DELETE RESTRICT"
+    },
+    {
+      "table_name": "KhoaHoc",
+      "constraint_name": "KhoaHoc_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (ma_khoa_hoc)"
+    },
+    {
+      "table_name": "LoaiBaiKiemTra",
+      "constraint_name": "LoaiBaiKiemTra_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (ma_loai_bai_kiem_tra)"
+    },
+    {
+      "table_name": "LoaiBaiKiemTra",
+      "constraint_name": "riki_weight_range",
+      "type": "c",
+      "definition": "CHECK (((trong_so IS NULL) OR ((trong_so >= (0)::double precision) AND (trong_so <= (100)::double precision) AND (trong_so <> 'NaN'::double precision))))"
+    },
+    {
+      "table_name": "LopHoc",
+      "constraint_name": "LopHoc_course_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (course_id) REFERENCES \"KhoaHoc\"(ma_khoa_hoc) ON UPDATE CASCADE ON DELETE RESTRICT"
+    },
+    {
+      "table_name": "LopHoc",
+      "constraint_name": "LopHoc_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (ma_lop_hoc)"
+    },
+    {
+      "table_name": "LopHoc",
+      "constraint_name": "LopHoc_teacher_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_giao_vien) REFERENCES \"GiaoVien\"(ma_giao_vien) ON UPDATE CASCADE ON DELETE RESTRICT"
+    },
+    {
+      "table_name": "LopHoc",
+      "constraint_name": "riki_class_capacity",
+      "type": "c",
+      "definition": "CHECK (((si_so_hien_tai >= 0) AND (si_so_toi_da >= si_so_hien_tai)))"
+    },
+    {
+      "table_name": "NguoiDung",
+      "constraint_name": "NguoiDung_ma_trang_thai_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_trang_thai) REFERENCES \"TrangThaiNguoiDung\"(ma_trang_thai) ON UPDATE CASCADE ON DELETE RESTRICT"
+    },
+    {
+      "table_name": "NguoiDung",
+      "constraint_name": "NguoiDung_ma_vai_tro_nguoi_dung_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ma_vai_tro_nguoi_dung) REFERENCES \"VaiTroNguoiDung\"(ma_vai_tro) ON UPDATE CASCADE ON DELETE RESTRICT"
+    },
+    {
+      "table_name": "NguoiDung",
+      "constraint_name": "NguoiDung_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (ma_nguoi_dung)"
+    },
+    {
+      "table_name": "NopBai",
+      "constraint_name": "NopBai_assignment_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (assignment_id) REFERENCES \"BaiTap\"(id) ON UPDATE CASCADE ON DELETE CASCADE"
+    },
+    {
+      "table_name": "NopBai",
+      "constraint_name": "NopBai_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "NopBai",
+      "constraint_name": "NopBai_student_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (student_id) REFERENCES \"HocVien\"(ma_hoc_vien) ON UPDATE CASCADE ON DELETE CASCADE"
+    },
+    {
+      "table_name": "PasswordResetToken",
+      "constraint_name": "PasswordResetToken_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "PasswordResetToken",
+      "constraint_name": "PasswordResetToken_user_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (user_id) REFERENCES \"NguoiDung\"(ma_nguoi_dung) ON UPDATE CASCADE ON DELETE CASCADE"
+    },
+    {
+      "table_name": "RefreshToken",
+      "constraint_name": "RefreshToken_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "RefreshToken",
+      "constraint_name": "RefreshToken_user_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (user_id) REFERENCES \"NguoiDung\"(ma_nguoi_dung) ON UPDATE CASCADE ON DELETE CASCADE"
+    },
+    {
+      "table_name": "TaiLieuLop",
+      "constraint_name": "TaiLieuLop_class_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (class_id) REFERENCES \"LopHoc\"(ma_lop_hoc) ON UPDATE CASCADE ON DELETE CASCADE"
+    },
+    {
+      "table_name": "TaiLieuLop",
+      "constraint_name": "TaiLieuLop_created_by_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (created_by) REFERENCES \"NguoiDung\"(ma_nguoi_dung) ON UPDATE CASCADE ON DELETE SET NULL"
+    },
+    {
+      "table_name": "TaiLieuLop",
+      "constraint_name": "TaiLieuLop_lesson_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (lesson_id) REFERENCES \"BuoiHoc\"(ma_buoi_hoc) ON UPDATE CASCADE ON DELETE SET NULL"
+    },
+    {
+      "table_name": "TaiLieuLop",
+      "constraint_name": "TaiLieuLop_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "TepBaiTap",
+      "constraint_name": "TepBaiTap_assignment_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (assignment_id) REFERENCES \"BaiTap\"(id) ON UPDATE CASCADE ON DELETE CASCADE"
+    },
+    {
+      "table_name": "TepBaiTap",
+      "constraint_name": "TepBaiTap_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "TepNopBai",
+      "constraint_name": "TepNopBai_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "TepNopBai",
+      "constraint_name": "TepNopBai_submission_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (submission_id) REFERENCES \"NopBai\"(id) ON UPDATE CASCADE ON DELETE CASCADE"
+    },
+    {
+      "table_name": "ThongBao",
+      "constraint_name": "ThongBao_created_by_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (created_by_id) REFERENCES \"NguoiDung\"(ma_nguoi_dung) ON UPDATE CASCADE ON DELETE SET NULL"
+    },
+    {
+      "table_name": "ThongBao",
+      "constraint_name": "ThongBao_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "ThongBao",
+      "constraint_name": "ThongBao_recipient_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (recipient_id) REFERENCES \"NguoiDung\"(ma_nguoi_dung) ON UPDATE CASCADE ON DELETE CASCADE"
+    },
+    {
+      "table_name": "TrangThaiDiemDanh",
+      "constraint_name": "TrangThaiDiemDanh_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (ma_trang_thai_diem_danh)"
+    },
+    {
+      "table_name": "TrangThaiNguoiDung",
+      "constraint_name": "TrangThaiNguoiDung_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (ma_trang_thai)"
+    },
+    {
+      "table_name": "TrinhDoJLPT",
+      "constraint_name": "TrinhDoJLPT_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (ma_trinh_do_jlpt)"
+    },
+    {
+      "table_name": "VaiTroNguoiDung",
+      "constraint_name": "VaiTroNguoiDung_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (ma_vai_tro)"
+    }
+  ],
+  "weights": [
+    {
+      "code": "QUIZ",
+      "weight": 10
+    },
+    {
+      "code": "MIDTERM",
+      "weight": 40
+    },
+    {
+      "code": "FINAL",
+      "weight": 50
+    },
+    {
+      "code": "JLPT",
+      "weight": 0
+    }
+  ]
+}

@@ -9,10 +9,17 @@
     "typecheck": "tsc --noEmit",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:push": "prisma db push",
-    "prisma:seed": "prisma db seed"
+    "prisma:push": "node scripts/reject-schema-push.cjs",
+    "prisma:deploy": "prisma migrate deploy",
+    "prisma:status": "prisma migrate status",
+    "prisma:seed": "prisma db seed",
+    "db:snapshot": "node scripts/database-snapshot.cjs",
+    "db:rehearse": "node scripts/rehearse-document-migration.cjs",
+    "db:smoke": "node scripts/smoke-api.cjs"
   },
-  "prisma": { "seed": "tsx prisma/seed.ts" },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "dependencies": {
     "@nestjs/common": "^11.1.6",
     "@nestjs/config": "^4.0.4",
@@ -30,12 +37,17 @@
     "rxjs": "^7.8.2"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.15",
+    "@electric-sql/pglite-socket": "^0.2.18",
     "@nestjs/cli": "^11.0.10",
     "@nestjs/schematics": "^11.0.7",
     "@types/cookie-parser": "^1.4.9",
     "@types/express": "^5.0.3",
     "@types/multer": "^2.2.0",
+    "@types/pg": "^8.23.1",
     "eslint": "^9.34.0",
+    "pg": "^8.23.1",
+    "playwright-core": "^1.64.1",
     "prisma": "^6.19.3",
     "tsx": "^4.19.2",
     "typescript": "^5.9.2",

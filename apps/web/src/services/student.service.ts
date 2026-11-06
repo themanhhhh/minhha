@@ -8,7 +8,7 @@ export const studentService = {
   async getAll(params: StudentListParams = {}, request: ApiRequest = apiClient): Promise<ListResponse<Student>> {
     const query = new URLSearchParams(Object.entries(params).filter(([, value]) => Boolean(value)) as [string, string][]);
     const response = await request<ListResponse<Student>>(`/students?${query.toString()}`);
-    return { ...response, data: response.data.map((item) => ({ ...item, id: Number(item.id), currentLevel: item.currentLevel ?? 'N5', targetLevel: item.targetLevel ?? 'N5', className: item.className ?? 'Chưa xếp lớp', status: item.status === 'ACTIVE' ? 'ACTIVE' : 'WAITING' })) };
+    return { ...response, data: response.data.map((item) => ({ ...item, id: Number(item.id), currentLevel: item.currentLevel ?? null, targetLevel: item.targetLevel ?? null, className: item.className ?? 'Chưa xếp lớp', status: item.status })) };
   },
-  async getById(id: number, request: ApiRequest = apiClient) { const student = await request<Student>(`/students/${id}`); return student ? { ...student, id: Number(student.id), currentLevel: student.currentLevel ?? 'N5', targetLevel: student.targetLevel ?? 'N5', className: student.className ?? 'Chưa xếp lớp', status: student.status === 'ACTIVE' ? 'ACTIVE' : 'WAITING' } : null; },
+  async getById(id: number, request: ApiRequest = apiClient) { const student = await request<Student>(`/students/${id}`); return student ? { ...student, id: Number(student.id), currentLevel: student.currentLevel ?? null, targetLevel: student.targetLevel ?? null, className: student.className ?? 'Chưa xếp lớp', status: student.status } : null; },
 };

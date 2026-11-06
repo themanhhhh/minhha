@@ -92,7 +92,10 @@ export class AuthService {
   }
 
   private async verifyRefreshToken(token: string) { try { return await this.jwt.verifyAsync<AuthPayload>(token, { secret: this.refreshSecret() }); } catch { throw new UnauthorizedException('Invalid or expired refresh token'); } }
-  private toSafeUser(user: { id: bigint; email: string; fullName: string; role: UserRole; student?: unknown; teacher?: unknown }) { return { id: user.id.toString(), email: user.email, fullName: user.fullName, role: user.role, student: user.student ?? null, teacher: user.teacher ?? null }; }
+  private toSafeUser(user: { id: bigint; email: string; fullName: string; role: UserRole; student?: unknown; teacher?: unknown }) {
+    const profile = (value: unknown) => value ? JSON.parse(JSON.stringify(value, (_key, item) => typeof item === 'bigint' ? item.toString() : item)) : null;
+    return { id: user.id.toString(), email: user.email, fullName: user.fullName, role: user.role, student: profile(user.student), teacher: profile(user.teacher) };
+  }
   private accessSecret() { const secret = process.env.JWT_ACCESS_SECRET; if (!secret) throw new Error('JWT_ACCESS_SECRET is not configured'); return secret; }
   private refreshSecret() { const secret = process.env.JWT_REFRESH_SECRET; if (!secret) throw new Error('JWT_REFRESH_SECRET is not configured'); return secret; }
   private assertNotRateLimited(email: string) { const attempt = this.failedAttempts.get(email); if (attempt && attempt.resetAt > Date.now() && attempt.count >= MAX_FAILED_ATTEMPTS) throw new HttpException('Too many login attempts. Try again later.', HttpStatus.TOO_MANY_REQUESTS); if (attempt && attempt.resetAt <= Date.now()) this.failedAttempts.delete(email); }

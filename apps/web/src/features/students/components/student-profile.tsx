@@ -46,11 +46,13 @@ export function StudentProfile({ profile }: { profile: StudentProfileData }) {
             <ProfileField icon={<UserRound />} label="Giới tính" value={profile.gender} />
             <ProfileField icon={<CalendarDays />} label="Ngày sinh" value={formatDate(profile.dateOfBirth)} />
             <ProfileField icon={<Mail />} label="Email" value={profile.email} />
-            <ProfileField icon={<Phone />} label="Số điện thoại" value={profile.phone} />
+            <ProfileField icon={<Phone />} label="Số điện thoại" value={profile.phone || "Chưa cập nhật"} />
+            <ProfileField icon={<Phone />} label="Liên hệ khẩn cấp" value={profile.emergencyContact || "Chưa cập nhật"} />
+            <ProfileField icon={<UserRound />} label="Mục tiêu học tập" value={profile.goal || "Chưa cập nhật"} />
           </div>
           <div className="mt-6 flex flex-wrap gap-3">
-            <LevelCard label="Trình độ hiện tại" value={profile.currentLevel} />
-            <LevelCard label="Mục tiêu JLPT" value={profile.targetLevel} />
+            <LevelCard label="Trình độ hiện tại" value={profile.currentLevel ?? "Chưa cập nhật"} />
+            <LevelCard label="Mục tiêu JLPT" value={profile.targetLevel ?? "Chưa cập nhật"} />
             <div className="flex min-w-32 flex-col justify-between rounded-lg border border-slate-100 bg-slate-50 px-3 py-2.5">
               <span className="text-[11px] text-slate-400">Trạng thái</span>
               <Badge variant="success" className="mt-1 w-fit"><Check className="mr-1 size-3" />{statusLabels[profile.status]}</Badge>

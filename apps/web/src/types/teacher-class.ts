@@ -7,6 +7,8 @@ export interface TeacherClass {
   code: string;
   name: string;
   section: string;
+  session?: string | null;
+  meetingUrl?: string | null;
   schedule: string;
   room: string;
   studentCount: number;

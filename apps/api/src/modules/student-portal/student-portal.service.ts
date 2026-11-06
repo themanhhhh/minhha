@@ -5,6 +5,8 @@ import { PrismaService } from '../../database/prisma.service';
 import { notFound } from '../../common/http-errors';
 import { SupabaseStorageService } from '../../storage/supabase-storage.service';
 import type { AuthPayload } from '../auth/auth.types';
+import { GradeService } from '../academic-data/grade.service';
+import { learningStatus } from '../../common/academic-rules';
 import { ScheduleQueryDto } from './dto/schedule-query.dto';
 import { SubmitAssignmentDto } from './dto/submit-assignment.dto';
 
@@ -26,11 +28,11 @@ const ALLOWED_FILE_TYPES = new Set([
 
 @Injectable()
 export class StudentPortalService {
-  constructor(private readonly prisma: PrismaService, private readonly storage: SupabaseStorageService) {}
+  constructor(private readonly prisma: PrismaService, private readonly storage: SupabaseStorageService, private readonly grades: GradeService) {}
 
   async getProfile(user: AuthPayload) {
     const student = await this.getStudent(user);
-    return { id: student.id.toString(), code: student.studentCode, fullName: student.user.fullName, email: student.user.email, gender: student.gender, dateOfBirth: student.dateOfBirth, currentLevel: student.currentLevel, targetLevel: student.targetLevel, status: student.user.status };
+    return { id: student.id.toString(), code: student.studentCode, fullName: student.user.fullName, email: student.user.email, gender: student.gender, dateOfBirth: student.dateOfBirth, currentLevel: student.currentLevel, targetLevel: student.targetLevel, phone: student.user.phone, goal: student.goal, emergencyContact: student.emergencyContact, status: learningStatus(student.enrollments), accountStatus: student.user.status };
   }
 
   async getClasses(user: AuthPayload) {
@@ -122,21 +124,23 @@ export class StudentPortalService {
   async getScores(user: AuthPayload) {
     const student = await this.getStudent(user);
     const scores = await this.prisma.score.findMany({ where: { studentId: student.id }, include: { test: { include: { class: true } } }, orderBy: { test: { testDate: 'desc' } } });
-    const average = scores.length ? Number((scores.reduce((sum, item) => sum + Number(item.value), 0) / scores.length).toFixed(1)) : 0;
-    return { summary: { average, highest: scores.length ? Math.max(...scores.map((item) => Number(item.value))) : 0, completedTests: scores.length }, data: scores.map((item) => ({ id: item.id.toString(), testId: item.testId.toString(), title: item.test.name, classCode: item.test.class.code, value: Number(item.value), maxScore: Number(item.test.maxScore), date: item.test.testDate, note: item.note })) };
+    const grading = await this.grades.summarize({ class: { enrollments: { some: { studentId: student.id } } } }, student.id);
+    const average = grading.average;
+    return { summary: { average, grading, highest: scores.length ? Math.max(...scores.map((item) => Number(item.value))) : 0, completedTests: scores.length }, data: scores.map((item) => ({ id: item.id.toString(), testId: item.testId.toString(), title: item.test.name, classCode: item.test.class.code, value: Number(item.value), maxScore: Number(item.test.maxScore), date: item.test.testDate, note: item.note })) };
   }
 
   async getProgress(user: AuthPayload) {
     const student = await this.getStudent(user);
     const [enrollments, lessons, attendance, scores] = await this.prisma.$transaction([this.prisma.enrollment.findMany({ where: { studentId: student.id, status: EnrollmentStatus.ACTIVE }, include: { class: { include: { course: true } } } }), this.prisma.lesson.count({ where: { class: { enrollments: { some: { studentId: student.id, status: EnrollmentStatus.ACTIVE } } }, status: LessonStatus.COMPLETED } }), this.prisma.attendance.findMany({ where: { studentId: student.id } }), this.prisma.score.findMany({ where: { studentId: student.id } })]);
-    const present = attendance.filter((item) => item.status === 'PRESENT').length;
-    const averageScore = scores.length ? Number((scores.reduce((sum, item) => sum + Number(item.value), 0) / scores.length).toFixed(1)) : 0;
+    const present = attendance.filter((item) => item.status === 'PRESENT' || item.status === 'LATE').length;
+    const grading = await this.grades.summarize({ class: { enrollments: { some: { studentId: student.id } } } }, student.id);
+    const averageScore = grading.average;
     const totalLessons = enrollments.reduce((sum, item) => sum + item.class.course.totalLessons, 0);
-    return { currentLevel: student.currentLevel, targetLevel: student.targetLevel, attendanceRate: attendance.length ? Math.round((present / attendance.length) * 100) : 0, averageScore, completedLessons: lessons, totalLessons };
+    return { currentLevel: student.currentLevel, targetLevel: student.targetLevel, attendanceRate: attendance.length ? Math.round((present / attendance.length) * 100) : 0, averageScore, grading, completedLessons: lessons, totalLessons };
   }
 
   private async getStudent(user: AuthPayload) {
-    const student = await this.prisma.student.findUnique({ where: { userId: BigInt(user.sub) }, include: { user: true } });
+    const student = await this.prisma.student.findUnique({ where: { userId: BigInt(user.sub) }, include: { user: true, enrollments: { select: { status: true } } } });
     if (!student) notFound('Student profile', user.sub);
     return student;
   }
@@ -146,7 +150,7 @@ export class StudentPortalService {
     const completedLessons = lessons.filter((lesson: any) => lesson.status === 'COMPLETED').length;
     const nextLesson = lessons.find((lesson: any) => lesson.status !== 'CANCELLED' && lesson.lessonDate >= new Date());
     const people = item.enrollments?.map((enrollment: any) => ({ id: Number(enrollment.student.id), fullName: enrollment.student.user.fullName, initials: enrollment.student.user.fullName.split(' ').slice(-2).map((part: string) => part[0]).join(''), role: 'STUDENT' as const })) ?? [];
-    return { id: item.id.toString(), code: item.code, name: item.name, section: item.course.name, courseName: item.course.name, level: item.course.level, teacherName: item.teacher.user.fullName, teacherInitials: item.teacher.user.fullName.split(' ').slice(-2).map((part: string) => part[0]).join(''), schedule: item.schedule, room: item.room ?? 'Chưa xếp phòng', studentCount: item._count?.enrollments ?? 0, capacity: item.capacity, lessonCount: item._count?.lessons ?? lessons.length, completedLessons, totalLessons: item.course.totalLessons, nextLesson: nextLesson ? `${nextLesson.lessonDate.toISOString().slice(0, 10)} · ${nextLesson.startTime.toISOString().slice(11, 16)}` : 'Chưa có lịch', nextLessonTitle: nextLesson?.title ?? 'Chưa có lịch', status: item.status === 'CANCELLED' ? 'COMPLETED' : item.status, theme: 'emerald' as const, enrollmentStatus, announcements: [], people: [{ id: Number(item.teacher.id), fullName: item.teacher.user.fullName, initials: item.teacher.user.fullName.split(' ').slice(-2).map((part: string) => part[0]).join(''), role: 'TEACHER' as const }, ...people] };
+    return { id: item.id.toString(), code: item.code, name: item.name, section: item.course.name, courseName: item.course.name, level: item.course.level, teacherName: item.teacher.user.fullName, teacherInitials: item.teacher.user.fullName.split(' ').slice(-2).map((part: string) => part[0]).join(''), schedule: item.schedule, room: item.room ?? 'Chưa xếp phòng', session: item.session, meetingUrl: item.meetingUrl, studentCount: item.studentCount, capacity: item.capacity, lessonCount: item._count?.lessons ?? lessons.length, completedLessons, totalLessons: item.course.totalLessons, nextLesson: nextLesson ? `${nextLesson.lessonDate.toISOString().slice(0, 10)} · ${nextLesson.startTime.toISOString().slice(11, 16)}` : 'Chưa có lịch', nextLessonTitle: nextLesson?.title ?? 'Chưa có lịch', status: item.status, theme: 'emerald' as const, enrollmentStatus, announcements: [], people: [{ id: Number(item.teacher.id), fullName: item.teacher.user.fullName, initials: item.teacher.user.fullName.split(' ').slice(-2).map((part: string) => part[0]).join(''), role: 'TEACHER' as const }, ...people] };
   }
 
   private lessonResponse(item: any) {

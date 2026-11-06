@@ -1,0 +1,22 @@
+{
+  "checkedAt": "2026-11-06T10:35:46.700Z",
+  "environment": "local migrated copy",
+  "migrationSha256": "c0dd7735ed82e51e8e3d6ccb0cee6ae02236d2b8abe638639de9796580f171a7",
+  "passed": [
+    "Login, own profile and dashboard: ACADEMIC_STAFF",
+    "Login, own profile and dashboard: DIRECTOR",
+    "Login, own profile and dashboard: TEACHER",
+    "Login, own profile and dashboard: STUDENT",
+    "Lookup, all learning-status filters, management lists and reports",
+    "Student portal, weighted grades, schedule and notifications",
+    "Student cannot change weights",
+    "Create student/course/class with documented fields; capacity enforcement",
+    "Reserve and resume atomically update learning status and occupancy",
+    "Transfer retains history and moves occupancy atomically",
+    "Substitute teacher can access only the assigned lesson; class/test and unrelated student access are denied",
+    "Lesson wall-clock round trip, record and unmarked/LATE attendance",
+    "Selected weights 10/40/50 yield 8.4 consistently in student summary",
+    "Cancelling a reservation preserves history without restoring occupancy",
+    "Two concurrent enrollment requests for the last slot produce exactly one success"
+  ]
+}
